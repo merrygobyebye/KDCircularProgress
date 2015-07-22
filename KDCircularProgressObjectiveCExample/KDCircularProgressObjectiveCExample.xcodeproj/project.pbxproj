@@ -1,0 +1,447 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		DDCB87DF1B60452700B9BE42 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = DDCB87DE1B60452700B9BE42 /* main.m */; };
+		DDCB87E21B60452700B9BE42 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = DDCB87E11B60452700B9BE42 /* AppDelegate.m */; };
+		DDCB87E51B60452700B9BE42 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DDCB87E41B60452700B9BE42 /* ViewController.m */; };
+		DDCB87E81B60452700B9BE42 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DDCB87E61B60452700B9BE42 /* Main.storyboard */; };
+		DDCB87EA1B60452700B9BE42 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DDCB87E91B60452700B9BE42 /* Images.xcassets */; };
+		DDCB87ED1B60452700B9BE42 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = DDCB87EB1B60452700B9BE42 /* LaunchScreen.xib */; };
+		DDCB87F91B60452700B9BE42 /* KDCircularProgressObjectiveCExampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DDCB87F81B60452700B9BE42 /* KDCircularProgressObjectiveCExampleTests.m */; };
+		DDCB88051B60455E00B9BE42 /* KDCircularProgress.m in Sources */ = {isa = PBXBuildFile; fileRef = DDCB88041B60455E00B9BE42 /* KDCircularProgress.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		DDCB87F31B60452700B9BE42 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DDCB87D11B60452700B9BE42 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DDCB87D81B60452700B9BE42;
+			remoteInfo = KDCircularProgressObjectiveCExample;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		DDCB87D91B60452700B9BE42 /* KDCircularProgressObjectiveCExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KDCircularProgressObjectiveCExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		DDCB87DD1B60452700B9BE42 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DDCB87DE1B60452700B9BE42 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		DDCB87E01B60452700B9BE42 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		DDCB87E11B60452700B9BE42 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		DDCB87E31B60452700B9BE42 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		DDCB87E41B60452700B9BE42 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		DDCB87E71B60452700B9BE42 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		DDCB87E91B60452700B9BE42 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		DDCB87EC1B60452700B9BE42 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
+		DDCB87F21B60452700B9BE42 /* KDCircularProgressObjectiveCExampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KDCircularProgressObjectiveCExampleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		DDCB87F71B60452700B9BE42 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DDCB87F81B60452700B9BE42 /* KDCircularProgressObjectiveCExampleTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KDCircularProgressObjectiveCExampleTests.m; sourceTree = "<group>"; };
+		DDCB88031B60455E00B9BE42 /* KDCircularProgress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KDCircularProgress.h; path = ../../KDCircularProgress/KDCircularProgress.h; sourceTree = "<group>"; };
+		DDCB88041B60455E00B9BE42 /* KDCircularProgress.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = KDCircularProgress.m; path = ../../KDCircularProgress/KDCircularProgress.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		DDCB87D61B60452700B9BE42 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DDCB87EF1B60452700B9BE42 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		DDCB87D01B60452700B9BE42 = {
+			isa = PBXGroup;
+			children = (
+				DDCB87DB1B60452700B9BE42 /* KDCircularProgressObjectiveCExample */,
+				DDCB87F51B60452700B9BE42 /* KDCircularProgressObjectiveCExampleTests */,
+				DDCB87DA1B60452700B9BE42 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		DDCB87DA1B60452700B9BE42 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				DDCB87D91B60452700B9BE42 /* KDCircularProgressObjectiveCExample.app */,
+				DDCB87F21B60452700B9BE42 /* KDCircularProgressObjectiveCExampleTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		DDCB87DB1B60452700B9BE42 /* KDCircularProgressObjectiveCExample */ = {
+			isa = PBXGroup;
+			children = (
+				DDCB88021B60452E00B9BE42 /* KDCircularProgress */,
+				DDCB87E01B60452700B9BE42 /* AppDelegate.h */,
+				DDCB87E11B60452700B9BE42 /* AppDelegate.m */,
+				DDCB87E31B60452700B9BE42 /* ViewController.h */,
+				DDCB87E41B60452700B9BE42 /* ViewController.m */,
+				DDCB87E61B60452700B9BE42 /* Main.storyboard */,
+				DDCB87E91B60452700B9BE42 /* Images.xcassets */,
+				DDCB87EB1B60452700B9BE42 /* LaunchScreen.xib */,
+				DDCB87DC1B60452700B9BE42 /* Supporting Files */,
+			);
+			path = KDCircularProgressObjectiveCExample;
+			sourceTree = "<group>";
+		};
+		DDCB87DC1B60452700B9BE42 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				DDCB87DD1B60452700B9BE42 /* Info.plist */,
+				DDCB87DE1B60452700B9BE42 /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		DDCB87F51B60452700B9BE42 /* KDCircularProgressObjectiveCExampleTests */ = {
+			isa = PBXGroup;
+			children = (
+				DDCB87F81B60452700B9BE42 /* KDCircularProgressObjectiveCExampleTests.m */,
+				DDCB87F61B60452700B9BE42 /* Supporting Files */,
+			);
+			path = KDCircularProgressObjectiveCExampleTests;
+			sourceTree = "<group>";
+		};
+		DDCB87F61B60452700B9BE42 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				DDCB87F71B60452700B9BE42 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		DDCB88021B60452E00B9BE42 /* KDCircularProgress */ = {
+			isa = PBXGroup;
+			children = (
+				DDCB88031B60455E00B9BE42 /* KDCircularProgress.h */,
+				DDCB88041B60455E00B9BE42 /* KDCircularProgress.m */,
+			);
+			name = KDCircularProgress;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		DDCB87D81B60452700B9BE42 /* KDCircularProgressObjectiveCExample */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DDCB87FC1B60452700B9BE42 /* Build configuration list for PBXNativeTarget "KDCircularProgressObjectiveCExample" */;
+			buildPhases = (
+				DDCB87D51B60452700B9BE42 /* Sources */,
+				DDCB87D61B60452700B9BE42 /* Frameworks */,
+				DDCB87D71B60452700B9BE42 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = KDCircularProgressObjectiveCExample;
+			productName = KDCircularProgressObjectiveCExample;
+			productReference = DDCB87D91B60452700B9BE42 /* KDCircularProgressObjectiveCExample.app */;
+			productType = "com.apple.product-type.application";
+		};
+		DDCB87F11B60452700B9BE42 /* KDCircularProgressObjectiveCExampleTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DDCB87FF1B60452700B9BE42 /* Build configuration list for PBXNativeTarget "KDCircularProgressObjectiveCExampleTests" */;
+			buildPhases = (
+				DDCB87EE1B60452700B9BE42 /* Sources */,
+				DDCB87EF1B60452700B9BE42 /* Frameworks */,
+				DDCB87F01B60452700B9BE42 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DDCB87F41B60452700B9BE42 /* PBXTargetDependency */,
+			);
+			name = KDCircularProgressObjectiveCExampleTests;
+			productName = KDCircularProgressObjectiveCExampleTests;
+			productReference = DDCB87F21B60452700B9BE42 /* KDCircularProgressObjectiveCExampleTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		DDCB87D11B60452700B9BE42 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0630;
+				ORGANIZATIONNAME = "Eric Fisher";
+				TargetAttributes = {
+					DDCB87D81B60452700B9BE42 = {
+						CreatedOnToolsVersion = 6.3.2;
+					};
+					DDCB87F11B60452700B9BE42 = {
+						CreatedOnToolsVersion = 6.3.2;
+						TestTargetID = DDCB87D81B60452700B9BE42;
+					};
+				};
+			};
+			buildConfigurationList = DDCB87D41B60452700B9BE42 /* Build configuration list for PBXProject "KDCircularProgressObjectiveCExample" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = DDCB87D01B60452700B9BE42;
+			productRefGroup = DDCB87DA1B60452700B9BE42 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				DDCB87D81B60452700B9BE42 /* KDCircularProgressObjectiveCExample */,
+				DDCB87F11B60452700B9BE42 /* KDCircularProgressObjectiveCExampleTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		DDCB87D71B60452700B9BE42 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DDCB87E81B60452700B9BE42 /* Main.storyboard in Resources */,
+				DDCB87ED1B60452700B9BE42 /* LaunchScreen.xib in Resources */,
+				DDCB87EA1B60452700B9BE42 /* Images.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DDCB87F01B60452700B9BE42 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		DDCB87D51B60452700B9BE42 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DDCB88051B60455E00B9BE42 /* KDCircularProgress.m in Sources */,
+				DDCB87E51B60452700B9BE42 /* ViewController.m in Sources */,
+				DDCB87E21B60452700B9BE42 /* AppDelegate.m in Sources */,
+				DDCB87DF1B60452700B9BE42 /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DDCB87EE1B60452700B9BE42 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DDCB87F91B60452700B9BE42 /* KDCircularProgressObjectiveCExampleTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		DDCB87F41B60452700B9BE42 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DDCB87D81B60452700B9BE42 /* KDCircularProgressObjectiveCExample */;
+			targetProxy = DDCB87F31B60452700B9BE42 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		DDCB87E61B60452700B9BE42 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				DDCB87E71B60452700B9BE42 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		DDCB87EB1B60452700B9BE42 /* LaunchScreen.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				DDCB87EC1B60452700B9BE42 /* Base */,
+			);
+			name = LaunchScreen.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		DDCB87FA1B60452700B9BE42 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		DDCB87FB1B60452700B9BE42 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		DDCB87FD1B60452700B9BE42 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = KDCircularProgressObjectiveCExample/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		DDCB87FE1B60452700B9BE42 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = KDCircularProgressObjectiveCExample/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		DDCB88001B60452700B9BE42 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = KDCircularProgressObjectiveCExampleTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/KDCircularProgressObjectiveCExample.app/KDCircularProgressObjectiveCExample";
+			};
+			name = Debug;
+		};
+		DDCB88011B60452700B9BE42 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = KDCircularProgressObjectiveCExampleTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/KDCircularProgressObjectiveCExample.app/KDCircularProgressObjectiveCExample";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		DDCB87D41B60452700B9BE42 /* Build configuration list for PBXProject "KDCircularProgressObjectiveCExample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DDCB87FA1B60452700B9BE42 /* Debug */,
+				DDCB87FB1B60452700B9BE42 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DDCB87FC1B60452700B9BE42 /* Build configuration list for PBXNativeTarget "KDCircularProgressObjectiveCExample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DDCB87FD1B60452700B9BE42 /* Debug */,
+				DDCB87FE1B60452700B9BE42 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		DDCB87FF1B60452700B9BE42 /* Build configuration list for PBXNativeTarget "KDCircularProgressObjectiveCExampleTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DDCB88001B60452700B9BE42 /* Debug */,
+				DDCB88011B60452700B9BE42 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = DDCB87D11B60452700B9BE42 /* Project object */;
+}
