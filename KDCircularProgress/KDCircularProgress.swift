@@ -15,6 +15,7 @@ public enum KDCircularProgressGlowMode {
 @IBDesignable
 public class KDCircularProgress: UIView {
     
+    //MARK: Why is there a function in a struct???
     private struct ConversionFunctions {
         static func DegreesToRadians (value:CGFloat) -> CGFloat {
             return value * CGFloat(M_PI) / 180.0

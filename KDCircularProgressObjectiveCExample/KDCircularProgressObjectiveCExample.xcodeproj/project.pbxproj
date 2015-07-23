@@ -14,7 +14,7 @@
 		DDCB87EA1B60452700B9BE42 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DDCB87E91B60452700B9BE42 /* Images.xcassets */; };
 		DDCB87ED1B60452700B9BE42 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = DDCB87EB1B60452700B9BE42 /* LaunchScreen.xib */; };
 		DDCB87F91B60452700B9BE42 /* KDCircularProgressObjectiveCExampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DDCB87F81B60452700B9BE42 /* KDCircularProgressObjectiveCExampleTests.m */; };
-		DDCB88051B60455E00B9BE42 /* KDCircularProgress.m in Sources */ = {isa = PBXBuildFile; fileRef = DDCB88041B60455E00B9BE42 /* KDCircularProgress.m */; };
+		DDCB88081B605D3100B9BE42 /* KDCircularProgress.m in Sources */ = {isa = PBXBuildFile; fileRef = DDCB88071B605D3100B9BE42 /* KDCircularProgress.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -41,8 +41,8 @@
 		DDCB87F21B60452700B9BE42 /* KDCircularProgressObjectiveCExampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KDCircularProgressObjectiveCExampleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		DDCB87F71B60452700B9BE42 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DDCB87F81B60452700B9BE42 /* KDCircularProgressObjectiveCExampleTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KDCircularProgressObjectiveCExampleTests.m; sourceTree = "<group>"; };
-		DDCB88031B60455E00B9BE42 /* KDCircularProgress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KDCircularProgress.h; path = ../../KDCircularProgress/KDCircularProgress.h; sourceTree = "<group>"; };
-		DDCB88041B60455E00B9BE42 /* KDCircularProgress.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = KDCircularProgress.m; path = ../../KDCircularProgress/KDCircularProgress.m; sourceTree = "<group>"; };
+		DDCB88061B605D3100B9BE42 /* KDCircularProgress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KDCircularProgress.h; path = ../../KDCircularProgress/KDCircularProgress.h; sourceTree = "<group>"; };
+		DDCB88071B605D3100B9BE42 /* KDCircularProgress.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = KDCircularProgress.m; path = ../../KDCircularProgress/KDCircularProgress.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -126,8 +126,8 @@
 		DDCB88021B60452E00B9BE42 /* KDCircularProgress */ = {
 			isa = PBXGroup;
 			children = (
-				DDCB88031B60455E00B9BE42 /* KDCircularProgress.h */,
-				DDCB88041B60455E00B9BE42 /* KDCircularProgress.m */,
+				DDCB88061B605D3100B9BE42 /* KDCircularProgress.h */,
+				DDCB88071B605D3100B9BE42 /* KDCircularProgress.m */,
 			);
 			name = KDCircularProgress;
 			sourceTree = "<group>";
@@ -232,10 +232,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DDCB88051B60455E00B9BE42 /* KDCircularProgress.m in Sources */,
 				DDCB87E51B60452700B9BE42 /* ViewController.m in Sources */,
 				DDCB87E21B60452700B9BE42 /* AppDelegate.m in Sources */,
 				DDCB87DF1B60452700B9BE42 /* main.m in Sources */,
+				DDCB88081B605D3100B9BE42 /* KDCircularProgress.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -432,6 +432,7 @@
 				DDCB87FE1B60452700B9BE42 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		DDCB87FF1B60452700B9BE42 /* Build configuration list for PBXNativeTarget "KDCircularProgressObjectiveCExampleTests" */ = {
 			isa = XCConfigurationList;
@@ -440,6 +441,7 @@
 				DDCB88011B60452700B9BE42 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
