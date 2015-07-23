@@ -33,19 +33,16 @@ IB_DESIGNABLE
 
 /* already exposed to implementation file
 - (instancetype) initWithFrame:(CGRect)frame;
+ - (instancetype) initWithCoder:(NSCoder *)aDecoder;
+ - (void)awakeFromNib;
  */
 
 // Convenience initializer
-- (instancetype) initWithFrameAndColors:(CGRect)frame colorArray:(NSArray *)colors;
+- (instancetype)initWithFrame:(CGRect)frame colors:(NSArray *)colors;
 
-/* already exposed to implementation file
-- (instancetype) initWithCoder:(NSCoder *)aDecoder;
-- (void)awakeFromNib;
- */
+// TODO: layerClass needed? probably not, not used in examples
 
-// TODO: layerClass needed? probably not
-
- - (void) setColors:(NSArray *)colors;
+- (void)setColors:(NSArray *)colors;
 
 - (void)animateFromAngle:(NSInteger)fromAngle animateToAngle:(NSInteger)toAngle animateDuration:(NSTimeInterval)duration animateCompletion:(BOOL)completion;
 
