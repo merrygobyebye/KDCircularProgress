@@ -27,21 +27,25 @@ IB_DESIGNABLE
 @property (nonatomic) IBInspectable CGFloat glowAmount;
 @property (nonatomic) IBInspectable CGFloat progressThickness;
 @property (nonatomic) IBInspectable CGFloat trackThickness;
-@property (nonatomic) IBInspectable UIColor* trackColor;
-// ???: create array of UIColor @property (nonatomic) IBInspectable UIColor * progressColors[];
+@property (nonatomic) IBInspectable UIColor *trackColor;
+@property (nonatomic) IBInspectable NSArray *progressColors;
 
-- (id) initWithFrame:(CGRect)frame;
 
-// ???: Convenience initializer
-//- (id) initWithFrameAndColors:(CGRect)frame colorArray:(UIColor* ...)colors;
+/* already exposed to implementation file
+- (instancetype) initWithFrame:(CGRect)frame;
+ */
 
-- (id) initWithCoder:(NSCoder *)aDecoder;
+// Convenience initializer
+- (instancetype) initWithFrameAndColors:(CGRect)frame colorArray:(NSArray *)colors;
+
+/* already exposed to implementation file
+- (instancetype) initWithCoder:(NSCoder *)aDecoder;
 - (void)awakeFromNib;
+ */
 
-// ???: layerClass?
+// TODO: layerClass needed? probably not
 
-// ???: setColors?
-// - (void) setColors:(UIColor* ...)colors;
+ - (void) setColors:(NSArray *)colors;
 
 - (void)animateFromAngle:(NSInteger)fromAngle animateToAngle:(NSInteger)toAngle animateDuration:(NSTimeInterval)duration animateCompletion:(BOOL)completion;
 
