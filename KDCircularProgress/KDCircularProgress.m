@@ -31,7 +31,7 @@
 
 @implementation KDCircularProgressViewLayer
 
-// ???: colorsArray didSet?
+
 - (CGFloat)glowAmountForAngle:(NSInteger*)angle glowAmount:(CGFloat)glowAmount glowMode:(KDCircularProgressGlowMode)glowMode size:(CGFloat)size{
     const CGFloat sizeToGlowRatio = 0.00015;
     switch (glowMode)
@@ -76,6 +76,17 @@
     _colorsArray = [colorsArray copy];
 }
 
+-(void)drawInContext:(CGContextRef)ctx{
+    UIGraphicsPushContext(ctx);
+    CGRect rect = self.bounds;
+    CGSize size = rect.size;
+    CGFloat trackLineWidth = self.radius * self.trackThickness;
+    CGFloat progressLineWidth = self.radius * self.progressThickness;
+    CGFloat arcRadius = MAX(self.radius - trackLineWidth/2, self.radius - progressLineWidth/2);
+    CGContextAddArc(ctx, (CGFloat)size.width/2.0, (CGFloat)size.height/2.0, arcRadius, 0, (CGFloat)M_PI*2, 0);
+    //TODO: Start from here
+}
+
 @end
 
 
@@ -92,17 +103,57 @@
 
 @implementation KDCircularProgress
 
-/*
+
 - (KDCircularProgressViewLayer *)progressLayer{
-    // ???: is this correct?
    return (KDCircularProgressViewLayer*)self.layer;
 }
- */
+
+# pragma mark - Inspectables
+- (void)initializeInspectableValues{
+    self.angle = 0;
+    self.startAngle = 0;
+    self.clockwise = YES;
+    self.roundedCorners = YES;
+    self.gradientRotateSpeed = (CGFloat)0;
+    self.glowAmount = (CGFloat)1.0;
+    self.glowMode = Forward;
+    self.progressThickness = (CGFloat)0.4;
+    self.trackThickness = (CGFloat)0.5;
+    self.trackColor = [UIColor blackColor];
+}
+
+
+- (void)setAngle:(NSInteger)angle{
+    if (self.angle == angle){
+        return;
+    }
+    
+    self.angle = angle;
+    if ([self isAnimating]){
+        [self pauseAnimation];
+    }
+    self.progressLayer.angle = angle;
+    
+}
+ 
+
+
+#pragma mark - Conversion Functions
+- (CGFloat)degreesToRadians:(CGFloat)value{
+return value * (CGFloat)M_PI / 180.0;
+}
+
+- (CGFloat)radiansToDegrees:(CGFloat)value{
+return value * 180.0 / (CGFloat)M_PI;
+}
+
+#pragma mark - Init
 
 - (instancetype)initWithFrame:(CGRect)frame{
     self = [super initWithFrame:frame];
     
     if (self) {
+        [self initializeInspectableValues];
         self.userInteractionEnabled = NO;
         [self setInitialValues];
         [self refreshValues];
@@ -115,6 +166,7 @@
 - (instancetype)initWithCoder:(NSCoder *)aDecoder{
     self = [super initWithCoder:aDecoder];
     if (self) {
+        [self initializeInspectableValues];
         [self setTranslatesAutoresizingMaskIntoConstraints:NO];
         self.userInteractionEnabled = NO;
         [self setInitialValues];
@@ -124,11 +176,15 @@
 }
 
 - (instancetype)initWithFrame:(CGRect)frame colors:(NSArray *)colors {
-    self = [super initWithFrame:frame];
+    self = [self initWithFrame:frame];
     if (self) {
         [self setColors:colors];
     }
     return self;
+}
+
+- (void)awakeFromNib{
+    [self checkAndSetIBColors];
 }
 
 + (Class)layerClass {
@@ -138,6 +194,11 @@
 - (void)setColors:(NSArray *)colors{
     _progressLayer.colorsArray = [colors copy];
     [_progressLayer setNeedsDisplay];
+}
+
+- (void)setRadius:(CGFloat)radius{
+    _radius = radius;
+    self.progressLayer.radius = radius;
 }
 
 
@@ -172,7 +233,7 @@
     KDCircularProgressViewLayer *presentationLayer = (KDCircularProgressViewLayer *)[_progressLayer presentationLayer];
     NSInteger currentValue = presentationLayer.angle;
     [_progressLayer removeAllAnimations];
-    // TODO: animationCompletionBlock = nil;
+    self.animationCompletionBlock = nil;
     _angle = currentValue;
 }
 
@@ -186,8 +247,15 @@
     return [_progressLayer animationForKey:(@"angle")] != nil;
 }
 - (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag{
-    // TODO: animationCompletionBlock
+    // ???: ???
+    void (^animationCompletionBlock)(BOOL) = self.animationCompletionBlock;
+    if (animationCompletionBlock){
+        // ???: No warning in Swift?
+        animationCompletionBlock:flag;
+        self.animationCompletionBlock = nil;
+    }
 }
+
 
 #pragma  mark - UIView overrides
 

@@ -52,7 +52,7 @@ IB_DESIGNABLE
 - (void)pauseAnimation;
 - (void)stopAnimation;
 - (BOOL)isAnimating;
-- (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag;
+//- (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag;
 - (void)didMoveToWindow;
 - (void)willMoveToSuperview:(UIView *)newSuperview;
 - (void)prepareForInterfaceBuilder;
