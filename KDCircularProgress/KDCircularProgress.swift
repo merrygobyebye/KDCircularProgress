@@ -112,8 +112,7 @@ public class KDCircularProgress: UIView {
             progressLayer.glowMode = glowMode
         }
     }
-    
-    @IBInspectable public var progressThickness: CGFloat = 0.4 {//Between 0 and 1
+        @IBInspectable public var progressThickness: CGFloat = 0.4 {//Between 0 and 1
         didSet {
             progressThickness = UtilityFunctions.Clamp(progressThickness, minMax: (0, 1))
             progressLayer.progressThickness = progressThickness/2
@@ -364,6 +363,7 @@ public class KDCircularProgress: UIView {
             let progressLineWidth = radius * progressThickness
             let arcRadius = max(radius - trackLineWidth/2, radius - progressLineWidth/2)
             CGContextAddArc(ctx, CGFloat(size.width/2.0), CGFloat(size.height/2.0), arcRadius, 0, CGFloat(M_PI * 2), 0)
+            // TODO: This isn't a subclassed object, so the set() method isn't implemented. why does this work??
             trackColor.set()
             CGContextSetLineWidth(ctx, trackLineWidth)
             CGContextSetLineCap(ctx, kCGLineCapButt)
@@ -422,7 +422,7 @@ public class KDCircularProgress: UIView {
             CGContextSetFillColorWithColor(ctx, color.CGColor)
             CGContextFillRect(ctx, bounds)
         }
-        
+        // TODO: for componentsArray, could use NSNumber and cast them all to CGFloat as we go??
         func drawGradientWithContext(ctx: CGContext!, componentsArray: [CGFloat]) {
             let baseSpace = CGColorSpaceCreateDeviceRGB()
             let locations = locationsCache ?? gradientLocationsFromColorCount(componentsArray.count/4, gradientWidth: bounds.size.width)
@@ -447,7 +447,7 @@ public class KDCircularProgress: UIView {
             
             CGContextDrawLinearGradient(ctx, gradient, startPoint, endPoint, 0)
         }
-        
+        // TODO: another array of NSNumber?
         func gradientLocationsFromColorCount(colorCount: Int, gradientWidth: CGFloat) -> [CGFloat] {
             if colorCount == 0 || gradientWidth == 0 {
                 return []

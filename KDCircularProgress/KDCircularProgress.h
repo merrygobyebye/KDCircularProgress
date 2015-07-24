@@ -28,7 +28,7 @@ IB_DESIGNABLE
 @property (nonatomic) IBInspectable CGFloat progressThickness;
 @property (nonatomic) IBInspectable CGFloat trackThickness;
 @property (nonatomic) IBInspectable UIColor *trackColor;
-@property (nonatomic) IBInspectable NSArray *progressColors;
+@property (nonatomic, copy) IBInspectable NSArray *progressColors;
 @property (nonatomic) IBInspectable KDCircularProgressGlowMode glowMode;
 
 
@@ -43,7 +43,7 @@ IB_DESIGNABLE
 
 // TODO: layerClass needed? probably not, not used in examples
 
-- (void)setColors:(NSArray *)colors;
+- (void)updateColors:(NSArray *)colors;
 
 - (void)animateFromAngle:(NSInteger)fromAngle animateToAngle:(NSInteger)toAngle animateDuration:(NSTimeInterval)duration animateCompletion:(void (^)(BOOL complete))animationCompletion;
 
