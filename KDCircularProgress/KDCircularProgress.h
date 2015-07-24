@@ -29,6 +29,7 @@ IB_DESIGNABLE
 @property (nonatomic) IBInspectable CGFloat trackThickness;
 @property (nonatomic) IBInspectable UIColor *trackColor;
 @property (nonatomic) IBInspectable NSArray *progressColors;
+@property (nonatomic) IBInspectable KDCircularProgressGlowMode glowMode;
 
 
 /* already exposed to implementation file
@@ -44,9 +45,9 @@ IB_DESIGNABLE
 
 - (void)setColors:(NSArray *)colors;
 
-- (void)animateFromAngle:(NSInteger)fromAngle animateToAngle:(NSInteger)toAngle animateDuration:(NSTimeInterval)duration animateCompletion:(BOOL)completion;
+- (void)animateFromAngle:(NSInteger)fromAngle animateToAngle:(NSInteger)toAngle animateDuration:(NSTimeInterval)duration animateCompletion:(void (^)(BOOL complete))animationCompletion;
 
-- (void)animateToAngle:(NSInteger)toAngle animateDuration:(NSTimeInterval)duration animateCompletion:(BOOL)completion;
+- (void)animateToAngle:(NSInteger)toAngle animateDuration:(NSTimeInterval)duration animateCompletion:(void (^)(BOOL complete))animationCompletion;
 
 - (void)pauseAnimation;
 - (void)stopAnimation;
