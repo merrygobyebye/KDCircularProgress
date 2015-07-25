@@ -13,7 +13,7 @@
 		BC9E75931A8CE4A500B1DF3D /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BC9E75921A8CE4A500B1DF3D /* Images.xcassets */; };
 		BC9E75961A8CE4A500B1DF3D /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = BC9E75941A8CE4A500B1DF3D /* LaunchScreen.xib */; };
 		BC9E75A21A8CE4A500B1DF3D /* KDCircularProgressExampleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC9E75A11A8CE4A500B1DF3D /* KDCircularProgressExampleTests.swift */; };
-		BC9E75AD1A8CE4CC00B1DF3D /* KDCircularProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC9E75AC1A8CE4CC00B1DF3D /* KDCircularProgress.swift */; };
+		DD5D7D6B1B62EF2B00C49271 /* KDCircularProgress.m in Sources */ = {isa = PBXBuildFile; fileRef = DD5D7D6A1B62EF2B00C49271 /* KDCircularProgress.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,7 +37,9 @@
 		BC9E759B1A8CE4A500B1DF3D /* KDCircularProgressExampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KDCircularProgressExampleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		BC9E75A01A8CE4A500B1DF3D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BC9E75A11A8CE4A500B1DF3D /* KDCircularProgressExampleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KDCircularProgressExampleTests.swift; sourceTree = "<group>"; };
-		BC9E75AC1A8CE4CC00B1DF3D /* KDCircularProgress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = KDCircularProgress.swift; path = ../KDCircularProgress/KDCircularProgress.swift; sourceTree = "<group>"; };
+		DD5D7D681B62EF2A00C49271 /* KDCircularProgressExample-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "KDCircularProgressExample-Bridging-Header.h"; sourceTree = "<group>"; };
+		DD5D7D691B62EF2B00C49271 /* KDCircularProgress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KDCircularProgress.h; sourceTree = "<group>"; };
+		DD5D7D6A1B62EF2B00C49271 /* KDCircularProgress.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KDCircularProgress.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -118,7 +120,9 @@
 		BC9E75AB1A8CE4B000B1DF3D /* KDCircularProgress */ = {
 			isa = PBXGroup;
 			children = (
-				BC9E75AC1A8CE4CC00B1DF3D /* KDCircularProgress.swift */,
+				DD5D7D691B62EF2B00C49271 /* KDCircularProgress.h */,
+				DD5D7D6A1B62EF2B00C49271 /* KDCircularProgress.m */,
+				DD5D7D681B62EF2A00C49271 /* KDCircularProgressExample-Bridging-Header.h */,
 			);
 			name = KDCircularProgress;
 			path = ..;
@@ -224,7 +228,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BC9E75AD1A8CE4CC00B1DF3D /* KDCircularProgress.swift in Sources */,
+				DD5D7D6B1B62EF2B00C49271 /* KDCircularProgress.m in Sources */,
 				BC9E758E1A8CE4A500B1DF3D /* ViewController.swift in Sources */,
 				BC9E758C1A8CE4A500B1DF3D /* AppDelegate.swift in Sources */,
 			);
@@ -349,9 +353,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				INFOPLIST_FILE = KDCircularProgressExample/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "KDCircularProgressExample-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
@@ -359,9 +366,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				INFOPLIST_FILE = KDCircularProgressExample/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "KDCircularProgressExample-Bridging-Header.h";
 			};
 			name = Release;
 		};
@@ -418,6 +427,7 @@
 				BC9E75A71A8CE4A500B1DF3D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		BC9E75A81A8CE4A500B1DF3D /* Build configuration list for PBXNativeTarget "KDCircularProgressExampleTests" */ = {
 			isa = XCConfigurationList;
@@ -426,6 +436,7 @@
 				BC9E75AA1A8CE4A500B1DF3D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

@@ -25,7 +25,7 @@ class ViewController: UIViewController {
         progress.roundedCorners = false
         progress.glowMode = .Forward
         progress.glowAmount = 0.9
-        progress.setColors(UIColor.cyanColor() ,UIColor.whiteColor(), UIColor.magentaColor(), UIColor.whiteColor(), UIColor.orangeColor())
+        progress.updateColors([UIColor.cyanColor() ,UIColor.whiteColor(), UIColor.magentaColor(), UIColor.whiteColor(), UIColor.orangeColor()])
         progress.center = CGPoint(x: view.center.x, y: view.center.y + 25)
         view.addSubview(progress)
     }
@@ -35,7 +35,7 @@ class ViewController: UIViewController {
     }
     
     @IBAction func animateButtonTapped(sender: UIButton) {
-        progress.animateToAngle(360, duration: 5) { completed in
+        progress.animateToAngle(360, animateDuration: 5) { completed in
             if completed {
                 println("animation stopped, completed")
             } else {

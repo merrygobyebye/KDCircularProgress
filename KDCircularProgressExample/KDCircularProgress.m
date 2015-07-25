@@ -12,20 +12,20 @@
 
 @interface KDCircularProgressViewLayer : CALayer
 
-@property(nonatomic) NSArray                    *colorsArray;
-@property(nonatomic) CGGradientRef              gradientCache;
-@property(nonatomic) NSArray                    *locationsCache;
-@property(nonatomic) NSInteger                  angle; // ???: NSManaged?
-@property(nonatomic) NSInteger                  startAngle;
-@property(nonatomic) BOOL                       clockwise;
-@property(nonatomic) CGFloat                    gradientRotateSpeed;
-@property(nonatomic) CGFloat                    glowAmount;
-@property(nonatomic) KDCircularProgressGlowMode glowMode;
-@property(nonatomic) CGFloat                    progressThickness;
-@property(nonatomic) CGFloat                    trackThickness;
-@property(nonatomic) UIColor                    *trackColor;
-@property(nonatomic) CGFloat                    radius;
-@property(nonatomic) BOOL                       roundedCorners;
+@property(nonatomic) NSArray                        *colorsArray;
+@property(nonatomic) CGGradientRef                  gradientCache;
+@property(nonatomic) NSArray                        *locationsCache;
+@property(nonatomic) NSInteger                      angle;
+@property(nonatomic) NSInteger                      startAngle;
+@property(nonatomic) BOOL                           clockwise;
+@property(nonatomic) CGFloat                        gradientRotateSpeed;
+@property(nonatomic) CGFloat                        glowAmount;
+@property(nonatomic) KDCircularProgressGlowMode     glowMode;
+@property(nonatomic) CGFloat                        progressThickness;
+@property(nonatomic) CGFloat                        trackThickness;
+@property(nonatomic) UIColor                        *trackColor;
+@property(nonatomic) CGFloat                        radius;
+@property(nonatomic) BOOL                           roundedCorners;
 
 
 
@@ -33,12 +33,13 @@
 
 @interface KDCircularProgress ()
 
-@property(nonatomic) KDCircularProgressViewLayer       *progressLayer;
-@property(nonatomic) CGFloat                           radius;
-@property(nonatomic) IBInspectable UIColor              *IBColor1;
-@property(nonatomic) IBInspectable UIColor              *IBColor2;
-@property(nonatomic) IBInspectable UIColor              *IBColor3;
-@property(nonatomic, copy) void                         (^animationCompletionBlock)(BOOL);
+@property(nonatomic) KDCircularProgressViewLayer    *progressLayer;
+@property(nonatomic) CGFloat                        radius;
+@property(nonatomic) IBInspectable UIColor          *IBColor1;
+@property(nonatomic) IBInspectable UIColor          *IBColor2;
+@property(nonatomic) IBInspectable UIColor          *IBColor3;
+@property(nonatomic, copy) void                     (^animationCompletionBlock)(BOOL);
+
 
 + (NSInteger)mod:(NSInteger)value range:(NSInteger)range min:(NSInteger)min max:(NSInteger)max;
 + (CGFloat)clamp:(CGFloat)value min:(CGFloat)min max:(CGFloat)max;
@@ -49,22 +50,29 @@
 
 @end
 
+# pragma mark -
+# pragma mark - KDCircularProgressViewLayer
+
 @implementation KDCircularProgressViewLayer
 
+#pragma mark - Lifecycle
 
-- (CGFloat)glowAmountForAngle:(NSInteger)angle glowAmount:(CGFloat)glowAmount glowMode:(KDCircularProgressGlowMode)glowMode size:(CGFloat)size{
-    const CGFloat sizeToGlowRatio = 0.00015;
-    switch (glowMode)
-    {
-        case Forward:
-            return (CGFloat)self.angle * size * sizeToGlowRatio * glowAmount;
-        case Reverse:
-            return (CGFloat)(360 - self.angle) * size * sizeToGlowRatio * glowAmount;
-        case Constant:
-            return 360 * size * sizeToGlowRatio * glowAmount;
-        default:
-            return 0;
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        
     }
+    return self;
+}
+
+- (instancetype)initWithCoder:(NSCoder *)coder
+{
+    self = [super initWithCoder:coder];
+    if (self) {
+        
+    }
+    return self;
 }
 
 - (instancetype)initWithLayer:(id)layer{
@@ -87,6 +95,37 @@
     return self;
 }
 
++ (BOOL)needsDisplayForKey:(NSString *)key {
+    return [key isEqualToString:@"angle"] ? YES : [super needsDisplayForKey:key];
+}
+
+
+
+# pragma mark - Private
+- (CGFloat)glowAmountForAngle:(NSInteger)angle glowAmount:(CGFloat)glowAmount glowMode:(KDCircularProgressGlowMode)glowMode size:(CGFloat)size{
+    const CGFloat sizeToGlowRatio = 0.00015;
+    switch (glowMode)
+    {
+        case Forward:
+            return (CGFloat)self.angle * size * sizeToGlowRatio * glowAmount;
+        case Reverse:
+            return (CGFloat)(360 - self.angle) * size * sizeToGlowRatio * glowAmount;
+        case Constant:
+            return 360 * size * sizeToGlowRatio * glowAmount;
+        default:
+            return 0;
+    }
+}
+
+
+
+
+
+
+
+
+
+
 - (void)setColorsArray:(NSArray *)colorsArray{
     if ([_colorsArray isEqual:colorsArray]){
         return;
@@ -96,6 +135,7 @@
     _colorsArray = [colorsArray copy];
 }
 
+
 -(void)drawInContext:(CGContextRef)ctx{
     UIGraphicsPushContext(ctx);
     CGRect rect = self.bounds;
@@ -104,7 +144,7 @@
     CGFloat progressLineWidth = self.radius * self.progressThickness;
     CGFloat arcRadius = MAX(self.radius - trackLineWidth/2, self.radius - progressLineWidth/2);
     CGContextAddArc(ctx, (CGFloat)size.width/2.0, (CGFloat)size.height/2.0, arcRadius, 0, (CGFloat)M_PI*2, 0);
-    // set trackColor??
+    [self.trackColor set];
     CGContextSetLineWidth(ctx, trackLineWidth);
     CGContextSetLineCap(ctx, kCGLineCapButt);
     CGContextDrawPath(ctx, kCGPathStroke);
@@ -131,11 +171,6 @@
     
     //Gradient - Fill
     if ([self.colorsArray count] > 1){
-        // Primitive C array
-//        CGFloat *componentsArray = malloc(sizeof(CGFloat)*100000);
-//        NSUInteger i = 0;
-        
-        
         NSMutableArray *componentsArrayMutable = [[NSMutableArray alloc] init];
         NSMutableArray *rgbColorsArray = [[NSMutableArray alloc] init];
         for (UIColor *color in self.colorsArray){
@@ -148,15 +183,8 @@
             }
         }
         for (UIColor *color in rgbColorsArray){
-            CGFloat *colorComponents = CGColorGetComponents(color.CGColor);
-            // Primitive C Array
-//            CGFloat color1 = colorComponents[0];
-//            componentsArray[i++] = color1;
-//            CGFloat color2 = colorComponents[1];
-//            componentsArray[i++] = color2;
-//            CGFloat color3 = colorComponents[2];
-//            componentsArray[i++] = color3;
-//            componentsArray[i++] = (CGFloat)1.0;
+            const CGFloat *colorComponents = CGColorGetComponents(color.CGColor);
+
             
             NSArray *colorsToAdd = [NSArray arrayWithObjects:[NSNumber numberWithFloat:colorComponents[0]], [NSNumber numberWithFloat:colorComponents[1]], [NSNumber numberWithFloat:colorComponents[2]], @1.0, nil];
             [componentsArrayMutable addObjectsFromArray:colorsToAdd];
@@ -175,16 +203,12 @@
     
     CGContextRestoreGState(ctx);
     UIGraphicsPopContext();
-    
-    //TODO: Done??
-    
 }
 
 - (void)drawGradientWithContext:(CGContextRef)ctx componentsArray:(NSArray*)componentsArray{
     CGColorSpaceRef baseSpace = CGColorSpaceCreateDeviceRGB();
     NSArray *locationsArray = self.locationsCache.count > 0 ? [self.locationsCache copy] : [self gradientLocationsFromColorCount:componentsArray.count/4 gradientWidth:self.bounds.size.width];
     CGGradientRef gradient;
-    //TODO: will this work?
     if (self.gradientCache){
         gradient = self.gradientCache;
     }
@@ -250,15 +274,16 @@
 
 @end
 
-
+# pragma mark -
+# pragma mark - KDCircularProgress
 
 
 @implementation KDCircularProgress
 
 @synthesize progressColors = _progressColors;
 
-- (KDCircularProgressViewLayer *)progressLayer{
-   return (KDCircularProgressViewLayer*)self.layer;
+- (KDCircularProgressViewLayer *)progressLayer {
+   return (KDCircularProgressViewLayer *)self.layer;
 }
 
 # pragma mark - Inspectables
@@ -275,16 +300,14 @@
     _trackColor = [UIColor blackColor];
 }
 
-// ???: should progressLayer be referenced with self.progressLayer or with _progressLayer in functions like these?
-// ???: is there a risk that any of these could be "set" with their current value, causing a return from the function when
-//      it should actually be continuing?
 - (void)setAngle:(NSInteger)angle{
-    
+
     _angle = angle;
     if ([self isAnimating]){
         [self pauseAnimation];
     }
     self.progressLayer.angle = angle;
+    [self.progressLayer setNeedsDisplay];
     
 }
 
@@ -373,8 +396,6 @@
     [self.progressLayer setNeedsDisplay];
 }
 
-// ???: should I check that each element is a UIColor?
-
 - (void)setProgressColors:(NSArray *)progressColors{
     if ([_progressColors isEqualToArray:progressColors]){
         return;
@@ -444,8 +465,8 @@ return value * 180.0 / (CGFloat)M_PI;
 }
 
 - (void)updateColors:(NSArray *)colors{
-    _progressLayer.colorsArray = [colors copy];
-    [_progressLayer setNeedsDisplay];
+    self.progressLayer.colorsArray = [colors copy];
+    [self.progressLayer setNeedsDisplay];
 }
 
 - (void)setRadius:(CGFloat)radius{
@@ -454,7 +475,7 @@ return value * 180.0 / (CGFloat)M_PI;
 }
 
 
-- (void)animateFromAngle:(NSInteger)fromAngle animateToAngle:(NSInteger)toAngle animateDuration:(NSTimeInterval)duration animateCompletion:(void (^)(BOOL))animationCompletion{
+- (void)animateFromAngle:(NSInteger)fromAngle animateToAngle:(NSInteger)toAngle animateDuration:(NSTimeInterval)duration animateCompletion:(void (^)(BOOL completed))animationCompletion{
     if ([self isAnimating]){
         [self pauseAnimation];
     }
@@ -482,24 +503,22 @@ return value * 180.0 / (CGFloat)M_PI;
 #pragma  mark - Animations
 
 - (void)pauseAnimation{
-    KDCircularProgressViewLayer *presentationLayer = (KDCircularProgressViewLayer *)[_progressLayer presentationLayer];
+    KDCircularProgressViewLayer *presentationLayer = (KDCircularProgressViewLayer *)[self.progressLayer presentationLayer];
     NSInteger currentValue = presentationLayer.angle;
-    [_progressLayer removeAllAnimations];
+    [self.progressLayer removeAllAnimations];
     self.animationCompletionBlock = nil;
     _angle = currentValue;
 }
 
 - (void)stopAnimation{
-    // ???: not sure why this first line is called, and why there is no warning in swift
-    //KDCircularProgressViewLayer *presentationLayer = (KDCircularProgressViewLayer *)[_progressLayer presentationLayer];
-    [_progressLayer removeAllAnimations];
+    KDCircularProgressViewLayer *presentationLayer = (KDCircularProgressViewLayer *)[_progressLayer presentationLayer];
+    [self.progressLayer removeAllAnimations];
     _angle = 0;
 }
 - (BOOL)isAnimating{
-    return [_progressLayer animationForKey:(@"angle")] != nil;
+    return [self.progressLayer animationForKey:(@"angle")] != nil;
 }
 - (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag{
-    // ???: ???
     void (^animationCompletionBlock)(BOOL) = self.animationCompletionBlock;
     if (animationCompletionBlock){
         animationCompletionBlock(flag);
@@ -525,14 +544,14 @@ return value * 180.0 / (CGFloat)M_PI;
     [self setInitialValues];
     [self refreshValues];
     [self checkAndSetIBColors];
-    [_progressLayer setNeedsDisplay];
+    [self.progressLayer setNeedsDisplay];
 }
 
 
 
 
 - (void)setInitialValues {
-    _radius = (self.frame.size.width/2.0) * 0.8; //We always apply a 20% padding, stopping glows from being clipped
+    self.radius = (self.frame.size.width/2.0) * 0.8; //We always apply a 20% padding, stopping glows from being clipped
     self.backgroundColor = [UIColor clearColor];
     [self updateColors:@[[UIColor whiteColor],[UIColor redColor]]];
 }
@@ -540,6 +559,7 @@ return value * 180.0 / (CGFloat)M_PI;
 
 
 - (void)refreshValues {
+    
     self.progressLayer.angle = self.angle;
     self.progressLayer.startAngle = [KDCircularProgress mod:self.startAngle range:360 min:0 max:360];
     self.progressLayer.clockwise = self.clockwise;
@@ -553,8 +573,7 @@ return value * 180.0 / (CGFloat)M_PI;
 }
 
 - (void)checkAndSetIBColors {
-    // TODO: Kludge
-    NSMutableArray *mutableColors = [[NSMutableArray init] alloc];
+    NSMutableArray *mutableColors = [[NSMutableArray alloc] init];
     if (self.IBColor1){
         [mutableColors addObject:self.IBColor1];
     }
