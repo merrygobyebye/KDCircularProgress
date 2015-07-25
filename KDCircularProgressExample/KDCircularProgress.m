@@ -27,8 +27,6 @@
 @property(nonatomic) CGFloat                        radius;
 @property(nonatomic) BOOL                           roundedCorners;
 
-
-
 @end
 
 @interface KDCircularProgress ()
@@ -40,13 +38,11 @@
 @property(nonatomic) IBInspectable UIColor          *IBColor3;
 @property(nonatomic, copy) void                     (^animationCompletionBlock)(BOOL);
 
-
+// Utility Methods
 + (NSInteger)mod:(NSInteger)value range:(NSInteger)range min:(NSInteger)min max:(NSInteger)max;
 + (CGFloat)clamp:(CGFloat)value min:(CGFloat)min max:(CGFloat)max;
 + (CGFloat)radiansToDegrees:(CGFloat)value;
 + (CGFloat)degreesToRadians:(CGFloat)value;
-
-
 
 @end
 
@@ -99,6 +95,16 @@
     return [key isEqualToString:@"angle"] ? YES : [super needsDisplayForKey:key];
 }
 
+#pragma mark - Custom Accessors
+- (void)setColorsArray:(NSArray *)colorsArray{
+    if ([_colorsArray isEqual:colorsArray]){
+        return;
+    }
+    _gradientCache = nil;
+    _locationsCache = nil;
+    _colorsArray = [colorsArray copy];
+}
+
 
 
 # pragma mark - Private
@@ -116,25 +122,6 @@
             return 0;
     }
 }
-
-
-
-
-
-
-
-
-
-
-- (void)setColorsArray:(NSArray *)colorsArray{
-    if ([_colorsArray isEqual:colorsArray]){
-        return;
-    }
-    _gradientCache = nil;
-    _locationsCache = nil;
-    _colorsArray = [colorsArray copy];
-}
-
 
 -(void)drawInContext:(CGContextRef)ctx{
     UIGraphicsPushContext(ctx);
@@ -282,11 +269,93 @@
 
 @synthesize progressColors = _progressColors;
 
+#pragma mark - Lifecycle
+
+- (instancetype)initWithFrame:(CGRect)frame{
+    self = [super initWithFrame:frame];
+    
+    if (self) {
+        [self initializeInspectableValues];
+        self.userInteractionEnabled = NO;
+        [self setInitialValues];
+        [self refreshValues];
+        [self checkAndSetIBColors];
+    }
+    
+    return self;
+}
+
+- (instancetype)initWithCoder:(NSCoder *)aDecoder{
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        [self initializeInspectableValues];
+        [self setTranslatesAutoresizingMaskIntoConstraints:NO];
+        self.userInteractionEnabled = NO;
+        [self setInitialValues];
+        [self refreshValues];
+    }
+    return self;
+}
+
+- (instancetype)initWithFrame:(CGRect)frame colors:(NSArray *)colors {
+    self = [self initWithFrame:frame];
+    if (self) {
+        [self updateColors:colors];
+    }
+    return self;
+}
+
+- (void)awakeFromNib{
+    [self checkAndSetIBColors];
+}
+
++ (Class)layerClass {
+    return [KDCircularProgressViewLayer class];
+}
+
+#pragma  mark - Lifecycle -> UIView overrides
+
+- (void)didMoveToWindow{
+    UIWindow *window;
+    if ((window = self.window)){
+        self.progressLayer.contentsScale = window.screen.scale;
+    }
+}
+
+- (void)willMoveToSuperview:(UIView *)newSuperview{
+    if (newSuperview == nil && [self isAnimating]){
+        [self pauseAnimation];
+    }
+}
+
+- (void)prepareForInterfaceBuilder{
+    [self setInitialValues];
+    [self refreshValues];
+    [self checkAndSetIBColors];
+    [self.progressLayer setNeedsDisplay];
+}
+
+#pragma mark - Initial setup
+
+- (void)setInitialValues {
+    self.radius = (self.frame.size.width/2.0) * 0.8; //We always apply a 20% padding, stopping glows from being clipped
+    self.backgroundColor = [UIColor clearColor];
+    [self updateColors:@[[UIColor whiteColor],[UIColor redColor]]];
+}
+
+
+
+#pragma mark - Custom Accessors
 - (KDCircularProgressViewLayer *)progressLayer {
    return (KDCircularProgressViewLayer *)self.layer;
 }
 
-# pragma mark - Inspectables
+- (void)setRadius:(CGFloat)radius{
+    _radius = radius;
+    self.progressLayer.radius = radius;
+}
+
+# pragma mark - Custom Accessors -> Inspectables
 - (void)initializeInspectableValues{
     _angle = 0;
     _startAngle = 0;
@@ -301,7 +370,7 @@
 }
 
 - (void)setAngle:(NSInteger)angle{
-
+    
     _angle = angle;
     if ([self isAnimating]){
         [self pauseAnimation];
@@ -408,155 +477,13 @@
 - (NSArray *)progressColors{
     return self.progressLayer.colorsArray;
 }
- 
 
 
-#pragma mark - Conversion Functions
-+ (CGFloat)degreesToRadians:(CGFloat)value{
-return value * (CGFloat)M_PI / 180.0;
-}
-
-+ (CGFloat)radiansToDegrees:(CGFloat)value{
-return value * 180.0 / (CGFloat)M_PI;
-}
-
-#pragma mark - Init
-
-- (instancetype)initWithFrame:(CGRect)frame{
-    self = [super initWithFrame:frame];
-    
-    if (self) {
-        [self initializeInspectableValues];
-        self.userInteractionEnabled = NO;
-        [self setInitialValues];
-        [self refreshValues];
-        [self checkAndSetIBColors];
-    }
-
-    return self;
-}
-
-- (instancetype)initWithCoder:(NSCoder *)aDecoder{
-    self = [super initWithCoder:aDecoder];
-    if (self) {
-        [self initializeInspectableValues];
-        [self setTranslatesAutoresizingMaskIntoConstraints:NO];
-        self.userInteractionEnabled = NO;
-        [self setInitialValues];
-        [self refreshValues];
-    }
-    return self;
-}
-
-- (instancetype)initWithFrame:(CGRect)frame colors:(NSArray *)colors {
-    self = [self initWithFrame:frame];
-    if (self) {
-        [self updateColors:colors];
-    }
-    return self;
-}
-
-- (void)awakeFromNib{
-    [self checkAndSetIBColors];
-}
-
-+ (Class)layerClass {
-    return [KDCircularProgressViewLayer class];
-}
-
+# pragma mark - Private
 - (void)updateColors:(NSArray *)colors{
     self.progressLayer.colorsArray = [colors copy];
     [self.progressLayer setNeedsDisplay];
 }
-
-- (void)setRadius:(CGFloat)radius{
-    _radius = radius;
-    self.progressLayer.radius = radius;
-}
-
-
-- (void)animateFromAngle:(NSInteger)fromAngle animateToAngle:(NSInteger)toAngle animateDuration:(NSTimeInterval)duration animateCompletion:(void (^)(BOOL completed))animationCompletion{
-    if ([self isAnimating]){
-        [self pauseAnimation];
-    }
-    
-    CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:(@"angle")];
-    animation.fromValue = [NSNumber numberWithInteger:fromAngle];
-    animation.toValue = [NSNumber numberWithInteger:toAngle];
-    animation.duration = duration;
-    animation.delegate = self;
-    self.angle = (NSInteger)toAngle;
-    self.animationCompletionBlock = animationCompletion;
-    
-    [self.progressLayer addAnimation:animation forKey:@"angle"];
-    
-}
-
-- (void)animateToAngle:(NSInteger)toAngle animateDuration:(NSTimeInterval)duration animateCompletion:(void (^)(BOOL completed))animationCompletion{
-    if ([self isAnimating]){
-        [self pauseAnimation];
-    }
-    
-    [self animateFromAngle:self.angle animateToAngle:toAngle animateDuration:duration animateCompletion:animationCompletion];
-}
-
-#pragma  mark - Animations
-
-- (void)pauseAnimation{
-    KDCircularProgressViewLayer *presentationLayer = (KDCircularProgressViewLayer *)[self.progressLayer presentationLayer];
-    NSInteger currentValue = presentationLayer.angle;
-    [self.progressLayer removeAllAnimations];
-    self.animationCompletionBlock = nil;
-    _angle = currentValue;
-}
-
-- (void)stopAnimation{
-    KDCircularProgressViewLayer *presentationLayer = (KDCircularProgressViewLayer *)[_progressLayer presentationLayer];
-    [self.progressLayer removeAllAnimations];
-    _angle = 0;
-}
-- (BOOL)isAnimating{
-    return [self.progressLayer animationForKey:(@"angle")] != nil;
-}
-- (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag{
-    void (^animationCompletionBlock)(BOOL) = self.animationCompletionBlock;
-    if (animationCompletionBlock){
-        animationCompletionBlock(flag);
-        self.animationCompletionBlock = nil;
-    }
-}
-
-
-#pragma  mark - UIView overrides
-
-- (void)didMoveToWindow{
-    UIWindow *window;
-    if ((window = self.window)){
-        self.progressLayer.contentsScale = window.screen.scale;
-    }
-}
-- (void)willMoveToSuperview:(UIView *)newSuperview{
-    if (newSuperview == nil && [self isAnimating]){
-        [self pauseAnimation];
-    }
-}
-- (void)prepareForInterfaceBuilder{
-    [self setInitialValues];
-    [self refreshValues];
-    [self checkAndSetIBColors];
-    [self.progressLayer setNeedsDisplay];
-}
-
-
-
-
-- (void)setInitialValues {
-    self.radius = (self.frame.size.width/2.0) * 0.8; //We always apply a 20% padding, stopping glows from being clipped
-    self.backgroundColor = [UIColor clearColor];
-    [self updateColors:@[[UIColor whiteColor],[UIColor redColor]]];
-}
-
-
 
 - (void)refreshValues {
     
@@ -590,6 +517,60 @@ return value * 180.0 / (CGFloat)M_PI;
     }
 }
 
+
+# pragma mark - Private -> Animations
+- (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag{
+    void (^animationCompletionBlock)(BOOL) = self.animationCompletionBlock;
+    if (animationCompletionBlock){
+        animationCompletionBlock(flag);
+        self.animationCompletionBlock = nil;
+    }
+}
+
+#pragma mark - Public
+#pragma mark - Public -> Animations
+- (void)animateFromAngle:(NSInteger)fromAngle animateToAngle:(NSInteger)toAngle animateDuration:(NSTimeInterval)duration animateCompletion:(void (^)(BOOL completed))animationCompletion{
+    if ([self isAnimating]){
+        [self pauseAnimation];
+    }
+    
+    CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:(@"angle")];
+    animation.fromValue = [NSNumber numberWithInteger:fromAngle];
+    animation.toValue = [NSNumber numberWithInteger:toAngle];
+    animation.duration = duration;
+    animation.delegate = self;
+    self.angle = (NSInteger)toAngle;
+    self.animationCompletionBlock = animationCompletion;
+    
+    [self.progressLayer addAnimation:animation forKey:@"angle"];
+    
+}
+
+- (void)animateToAngle:(NSInteger)toAngle animateDuration:(NSTimeInterval)duration animateCompletion:(void (^)(BOOL completed))animationCompletion{
+    if ([self isAnimating]){
+        [self pauseAnimation];
+    }
+    
+    [self animateFromAngle:self.angle animateToAngle:toAngle animateDuration:duration animateCompletion:animationCompletion];
+}
+
+- (void)pauseAnimation{
+    KDCircularProgressViewLayer *presentationLayer = (KDCircularProgressViewLayer *)[self.progressLayer presentationLayer];
+    NSInteger currentValue = presentationLayer.angle;
+    [self.progressLayer removeAllAnimations];
+    self.animationCompletionBlock = nil;
+    _angle = currentValue;
+}
+
+- (void)stopAnimation{
+    KDCircularProgressViewLayer *presentationLayer = (KDCircularProgressViewLayer *)[_progressLayer presentationLayer];
+    [self.progressLayer removeAllAnimations];
+    _angle = 0;
+}
+- (BOOL)isAnimating{
+    return [self.progressLayer animationForKey:(@"angle")] != nil;
+}
+
 # pragma mark - Utility Functions
 + (NSInteger)mod:(NSInteger)value range:(NSInteger)range min:(NSInteger)min max:(NSInteger)max{
     NSAssert(labs(range) <= labs(min-max), @"range should be <= the interval");
@@ -610,6 +591,15 @@ return value * 180.0 / (CGFloat)M_PI;
         return max;
     }
     return value;
+}
+
+#pragma mark - Utility Functions -> Conversion Functions
++ (CGFloat)degreesToRadians:(CGFloat)value{
+    return value * (CGFloat)M_PI / 180.0;
+}
+
++ (CGFloat)radiansToDegrees:(CGFloat)value{
+    return value * 180.0 / (CGFloat)M_PI;
 }
 
 @end

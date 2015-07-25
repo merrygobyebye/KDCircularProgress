@@ -18,7 +18,8 @@ typedef NS_ENUM(NSInteger, KDCircularProgressGlowMode){
 
 IB_DESIGNABLE
 @interface KDCircularProgress : UIView
-    
+
+#pragma mark - Public Properties
 @property (nonatomic) IBInspectable NSInteger angle;
 @property (nonatomic) IBInspectable NSInteger startAngle;
 @property (nonatomic) IBInspectable BOOL clockwise;
@@ -31,18 +32,16 @@ IB_DESIGNABLE
 @property (nonatomic, copy) IBInspectable NSArray *progressColors;
 @property (nonatomic) IBInspectable KDCircularProgressGlowMode glowMode;
 
-
-/* already exposed to implementation file
-- (instancetype) initWithFrame:(CGRect)frame;
- - (instancetype) initWithCoder:(NSCoder *)aDecoder;
- - (void)awakeFromNib;
- */
-
-// Convenience initializer
+#pragma mark - Public Lifecycle
 - (instancetype)initWithFrame:(CGRect)frame colors:(NSArray *)colors;
 
-// TODO: layerClass needed? probably not, not used in examples
+- (void)didMoveToWindow;
 
+- (void)willMoveToSuperview:(UIView *)newSuperview;
+
+- (void)prepareForInterfaceBuilder;
+
+#pragma mark - Public
 - (void)updateColors:(NSArray *)colors;
 
 - (void)animateFromAngle:(NSInteger)fromAngle animateToAngle:(NSInteger)toAngle animateDuration:(NSTimeInterval)duration animateCompletion:(void (^)(BOOL complete))animationCompletion;
@@ -50,13 +49,9 @@ IB_DESIGNABLE
 - (void)animateToAngle:(NSInteger)toAngle animateDuration:(NSTimeInterval)duration animateCompletion:(void (^)(BOOL complete))animationCompletion;
 
 - (void)pauseAnimation;
+
 - (void)stopAnimation;
+
 - (BOOL)isAnimating;
-//- (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag;
-- (void)didMoveToWindow;
-- (void)willMoveToSuperview:(UIView *)newSuperview;
-- (void)prepareForInterfaceBuilder;
-
-
 
 @end
