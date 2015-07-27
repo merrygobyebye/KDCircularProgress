@@ -6,9 +6,58 @@
 //  Copyright (c) 2015 Eric Fisher. All rights reserved.
 //
 
+#pragma mark - KDCircularProgressUtilityFunctions
+
 #import "KDCircularProgress.h"
 
+@interface KDCircularProgressUtilityFunctions : NSObject
 
++ (NSInteger)mod:(NSInteger)value range:(NSInteger)range min:(NSInteger)min max:(NSInteger)max;
++ (CGFloat)clamp:(CGFloat)value min:(CGFloat)min max:(CGFloat)max;
++ (CGFloat)radiansToDegrees:(CGFloat)value;
++ (CGFloat)degreesToRadians:(CGFloat)value;
+
+
+@end
+
+@implementation KDCircularProgressUtilityFunctions
+
+# pragma mark - Utility Functions
+
++ (NSInteger)mod:(NSInteger)value range:(NSInteger)range min:(NSInteger)min max:(NSInteger)max{
+    NSAssert(labs(range) <= labs(min-max), @"range should be <= the interval");
+    if (value >= min && value <= max){
+        return value;
+    }
+    if (value < min) {
+        return [self mod:(value + range) range:range min:min max:max];
+    }
+    return [self mod:(value-range) range:range min:min max:max];
+}
+
++ (CGFloat)clamp:(CGFloat)value min:(CGFloat)min max:(CGFloat)max{
+    if (value < min){
+        return min;
+    }
+    if (value > max) {
+        return max;
+    }
+    return value;
+}
+
+#pragma mark - Conversion Functions
+
++ (CGFloat)degreesToRadians:(CGFloat)value{
+    return value * (CGFloat)M_PI / 180.0;
+}
+
++ (CGFloat)radiansToDegrees:(CGFloat)value{
+    return value * 180.0 / (CGFloat)M_PI;
+}
+
+@end
+
+#pragma mark - KDCircularProgressViewLayer
 
 @interface KDCircularProgressViewLayer : CALayer
 
@@ -29,24 +78,6 @@
 
 @end
 
-@interface KDCircularProgress ()
-
-@property(nonatomic) KDCircularProgressViewLayer    *progressLayer;
-@property(nonatomic) CGFloat                        radius;
-@property(nonatomic) IBInspectable UIColor          *IBColor1;
-@property(nonatomic) IBInspectable UIColor          *IBColor2;
-@property(nonatomic) IBInspectable UIColor          *IBColor3;
-@property(nonatomic, copy) void                     (^animationCompletionBlock)(BOOL);
-
-// Utility Methods
-+ (NSInteger)mod:(NSInteger)value range:(NSInteger)range min:(NSInteger)min max:(NSInteger)max;
-+ (CGFloat)clamp:(CGFloat)value min:(CGFloat)min max:(CGFloat)max;
-+ (CGFloat)radiansToDegrees:(CGFloat)value;
-+ (CGFloat)degreesToRadians:(CGFloat)value;
-
-@end
-
-# pragma mark -
 # pragma mark - KDCircularProgressViewLayer
 
 @implementation KDCircularProgressViewLayer
@@ -96,6 +127,7 @@
 }
 
 #pragma mark - Custom Accessors
+
 - (void)setColorsArray:(NSArray *)colorsArray{
     if ([_colorsArray isEqual:colorsArray]){
         return;
@@ -107,7 +139,8 @@
 
 
 
-# pragma mark - Private
+# pragma mark - Drawing Functions
+
 - (CGFloat)glowAmountForAngle:(NSInteger)angle glowAmount:(CGFloat)glowAmount glowMode:(KDCircularProgressGlowMode)glowMode size:(CGFloat)size{
     const CGFloat sizeToGlowRatio = 0.00015;
     switch (glowMode)
@@ -138,9 +171,9 @@
     
     UIGraphicsBeginImageContextWithOptions(size, false, 0.0);
     CGContextRef imageCtx = UIGraphicsGetCurrentContext();
-    NSInteger reducedAngle = [KDCircularProgress mod:self.angle range:360 min:0 max:360];
-    CGFloat fromAngle = [KDCircularProgress degreesToRadians:(CGFloat)self.startAngle * -1];
-    CGFloat toAngle = [KDCircularProgress degreesToRadians:(CGFloat)(self.clockwise == YES ? reducedAngle * -1 : reducedAngle) - self.startAngle];
+    NSInteger reducedAngle = [KDCircularProgressUtilityFunctions mod:self.angle range:360 min:0 max:360];
+    CGFloat fromAngle = [KDCircularProgressUtilityFunctions degreesToRadians:(CGFloat)self.startAngle * -1];
+    CGFloat toAngle = [KDCircularProgressUtilityFunctions degreesToRadians:(CGFloat)(self.clockwise == YES ? reducedAngle * -1 : reducedAngle) - self.startAngle];
     CGContextAddArc(imageCtx, (CGFloat)size.width/2.0, (CGFloat)size.height/2.0, arcRadius, fromAngle, toAngle, self.clockwise == true ? 1 : 0);
     CGFloat glowValue = [self glowAmountForAngle:reducedAngle glowAmount:self.glowAmount glowMode:self.glowMode size:size.width];
     if (glowValue > 0){
@@ -221,7 +254,7 @@
     CGFloat halfX = self.bounds.size.width/2.0;
     CGFloat floatPi = (CGFloat)M_PI;
     CGFloat rotateSpeed = self.clockwise == YES ? self.gradientRotateSpeed : self.gradientRotateSpeed * -1;
-    CGFloat angleInRadians = [KDCircularProgress degreesToRadians:rotateSpeed * (CGFloat)self.angle - 90];
+    CGFloat angleInRadians = [KDCircularProgressUtilityFunctions degreesToRadians:rotateSpeed * (CGFloat)self.angle - 90];
     CGFloat oppositeAngle = angleInRadians > floatPi ? angleInRadians - floatPi : angleInRadians + floatPi;
     
     CGPoint startPoint = CGPointMake((cos(angleInRadians) * halfX) + halfX, (sin(angleInRadians) * halfX) + halfX);
@@ -261,9 +294,19 @@
 
 @end
 
-# pragma mark -
+
 # pragma mark - KDCircularProgress
 
+@interface KDCircularProgress ()
+
+@property(nonatomic) KDCircularProgressViewLayer    *progressLayer;
+@property(nonatomic) CGFloat                        radius;
+@property(nonatomic) IBInspectable UIColor          *IBColor1;
+@property(nonatomic) IBInspectable UIColor          *IBColor2;
+@property(nonatomic) IBInspectable UIColor          *IBColor3;
+@property(nonatomic, copy) void                     (^animationCompletionBlock)(BOOL);
+
+@end
 
 @implementation KDCircularProgress
 
@@ -313,7 +356,7 @@
     return [KDCircularProgressViewLayer class];
 }
 
-#pragma  mark - Lifecycle -> UIView overrides
+#pragma  mark - UIView overrides
 
 - (void)didMoveToWindow{
     UIWindow *window;
@@ -343,9 +386,45 @@
     [self updateColors:@[[UIColor whiteColor],[UIColor redColor]]];
 }
 
+- (void)checkAndSetIBColors {
+    NSMutableArray *mutableColors = [[NSMutableArray alloc] init];
+    if (self.IBColor1){
+        [mutableColors addObject:self.IBColor1];
+    }
+    if (self.IBColor2){
+        [mutableColors addObject:self.IBColor2];
+    }
+    if (self.IBColor3){
+        [mutableColors addObject:self.IBColor3];
+    }
+    
+    NSArray *colors = [mutableColors copy];
+    if ([mutableColors count] > 0){
+        [self updateColors:colors];
+    }
+}
 
+- (void)refreshValues {
+    
+    self.progressLayer.angle = self.angle;
+    self.progressLayer.startAngle = [KDCircularProgressUtilityFunctions mod:self.startAngle range:360 min:0 max:360];
+    self.progressLayer.clockwise = self.clockwise;
+    self.progressLayer.roundedCorners = self.roundedCorners;
+    self.progressLayer.gradientRotateSpeed = self.gradientRotateSpeed;
+    self.progressLayer.glowAmount = [KDCircularProgressUtilityFunctions clamp:self.glowAmount min:0 max:1];
+    self.progressLayer.glowMode = self.glowMode;
+    self.progressLayer.progressThickness = self.progressThickness/2;
+    self.progressLayer.trackColor = self.trackColor;
+    self.progressLayer.trackThickness = self.trackThickness/2;
+}
+
+- (void)updateColors:(NSArray *)colors{
+    self.progressLayer.colorsArray = [colors copy];
+    [self.progressLayer setNeedsDisplay];
+}
 
 #pragma mark - Custom Accessors
+
 - (KDCircularProgressViewLayer *)progressLayer {
    return (KDCircularProgressViewLayer *)self.layer;
 }
@@ -355,7 +434,6 @@
     self.progressLayer.radius = radius;
 }
 
-# pragma mark - Custom Accessors -> Inspectables
 - (void)initializeInspectableValues{
     _angle = 0;
     _startAngle = 0;
@@ -386,7 +464,7 @@
     }
     
     _startAngle = startAngle;
-    self.progressLayer.startAngle = [KDCircularProgress mod:startAngle range:360 min:0 max:360];
+    self.progressLayer.startAngle = [KDCircularProgressUtilityFunctions mod:startAngle range:360 min:0 max:360];
     [self.progressLayer setNeedsDisplay];
 }
 
@@ -424,7 +502,7 @@
     }
     
     _glowAmount = glowAmount;
-    self.progressLayer.glowAmount = [KDCircularProgress clamp:glowAmount min:0 max:1];
+    self.progressLayer.glowAmount = [KDCircularProgressUtilityFunctions clamp:glowAmount min:0 max:1];
 }
 
 - (void)setGlowMode:(KDCircularProgressGlowMode)glowMode{
@@ -442,7 +520,7 @@
     }
     
     _progressThickness = progressThickness;
-    _progressThickness = [KDCircularProgress clamp:_progressThickness min:0 max:1];
+    _progressThickness = [KDCircularProgressUtilityFunctions clamp:_progressThickness min:0 max:1];
     self.progressLayer.progressThickness = progressThickness/2;
 }
 
@@ -452,7 +530,7 @@
     }
     
     _trackThickness = trackThickness;
-    _trackThickness = [KDCircularProgress clamp:_trackThickness min:0 max:1];
+    _trackThickness = [KDCircularProgressUtilityFunctions clamp:_trackThickness min:0 max:1];
 }
 
 - (void)setTrackColor:(UIColor *)trackColor{
@@ -478,57 +556,8 @@
     return self.progressLayer.colorsArray;
 }
 
+#pragma mark  - Animations
 
-# pragma mark - Private
-- (void)updateColors:(NSArray *)colors{
-    self.progressLayer.colorsArray = [colors copy];
-    [self.progressLayer setNeedsDisplay];
-}
-
-- (void)refreshValues {
-    
-    self.progressLayer.angle = self.angle;
-    self.progressLayer.startAngle = [KDCircularProgress mod:self.startAngle range:360 min:0 max:360];
-    self.progressLayer.clockwise = self.clockwise;
-    self.progressLayer.roundedCorners = self.roundedCorners;
-    self.progressLayer.gradientRotateSpeed = self.gradientRotateSpeed;
-    self.progressLayer.glowAmount = [KDCircularProgress clamp:self.glowAmount min:0 max:1];
-    self.progressLayer.glowMode = self.glowMode;
-    self.progressLayer.progressThickness = self.progressThickness/2;
-    self.progressLayer.trackColor = self.trackColor;
-    self.progressLayer.trackThickness = self.trackThickness/2;
-}
-
-- (void)checkAndSetIBColors {
-    NSMutableArray *mutableColors = [[NSMutableArray alloc] init];
-    if (self.IBColor1){
-        [mutableColors addObject:self.IBColor1];
-    }
-    if (self.IBColor2){
-        [mutableColors addObject:self.IBColor2];
-    }
-    if (self.IBColor3){
-        [mutableColors addObject:self.IBColor3];
-    }
-    
-    NSArray *colors = [mutableColors copy];
-    if ([mutableColors count] > 0){
-        [self updateColors:colors];
-    }
-}
-
-
-# pragma mark - Private -> Animations
-- (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag{
-    void (^animationCompletionBlock)(BOOL) = self.animationCompletionBlock;
-    if (animationCompletionBlock){
-        animationCompletionBlock(flag);
-        self.animationCompletionBlock = nil;
-    }
-}
-
-#pragma mark - Public
-#pragma mark - Public -> Animations
 - (void)animateFromAngle:(NSInteger)fromAngle animateToAngle:(NSInteger)toAngle animateDuration:(NSTimeInterval)duration animateCompletion:(void (^)(BOOL completed))animationCompletion{
     if ([self isAnimating]){
         [self pauseAnimation];
@@ -571,35 +600,12 @@
     return [self.progressLayer animationForKey:(@"angle")] != nil;
 }
 
-# pragma mark - Utility Functions
-+ (NSInteger)mod:(NSInteger)value range:(NSInteger)range min:(NSInteger)min max:(NSInteger)max{
-    NSAssert(labs(range) <= labs(min-max), @"range should be <= the interval");
-    if (value >= min && value <= max){
-        return value;
+- (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag{
+    void (^animationCompletionBlock)(BOOL) = self.animationCompletionBlock;
+    if (animationCompletionBlock){
+        animationCompletionBlock(flag);
+        self.animationCompletionBlock = nil;
     }
-    if (value < min) {
-        return [self mod:(value + range) range:range min:min max:max];
-    }
-    return [self mod:(value-range) range:range min:min max:max];
-}
-
-+ (CGFloat)clamp:(CGFloat)value min:(CGFloat)min max:(CGFloat)max{
-    if (value < min){
-        return min;
-    }
-    if (value > max) {
-        return max;
-    }
-    return value;
-}
-
-#pragma mark - Utility Functions -> Conversion Functions
-+ (CGFloat)degreesToRadians:(CGFloat)value{
-    return value * (CGFloat)M_PI / 180.0;
-}
-
-+ (CGFloat)radiansToDegrees:(CGFloat)value{
-    return value * 180.0 / (CGFloat)M_PI;
 }
 
 @end
