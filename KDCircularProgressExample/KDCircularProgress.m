@@ -85,6 +85,8 @@
 
 @implementation KDCircularProgressViewLayer
 
+static               float const                 noRepeatClipToRectOffsetMultiplier = 0.02;
+
 #pragma mark - Lifecycle
 
 - (instancetype)init
@@ -222,7 +224,7 @@
         }
         
         NSArray *componentsArray = [componentsArrayMutable copy];
-        [self drawGradientWithContext:ctx componentsArray:componentsArray cacheIndex:nil];
+        [self drawGradientWithContext:ctx componentsArray:componentsArray cacheIndex:0];
         
     }
     else{
@@ -272,7 +274,7 @@
         
         [self drawGradientWithContext:ctx componentsArray:componentsArray cacheIndex:0];
         
-        CGContextClipToRect(ctx, CGRectMake(self.bounds.origin.x - 6, self.bounds.origin.y, self.bounds.size.width/2, self.bounds.size.height));
+        CGContextClipToRect(ctx, CGRectMake(self.bounds.origin.x - noRepeatClipToRectOffsetMultiplier * self.bounds.size.width, self.bounds.origin.y, self.bounds.size.width/2, self.bounds.size.height));
         [self drawGradientWithContext:ctx componentsArray:componentsArray2 cacheIndex:1];
     }
     else{
@@ -292,27 +294,40 @@
 
 - (void)repeatMiddleColor:(NSMutableArray*)rgbColorsArray{
     if ([rgbColorsArray count] % 2 != 0){
+        // Put middle color on bottom of both gradients
         [rgbColorsArray insertObject:rgbColorsArray[[rgbColorsArray count]/2] atIndex:[rgbColorsArray count]/2];
     }
-    // TODO: Even number of colors!
-//    else{
-//        for (int i = 0; i < [rgbColorsArray count]; ++i)
-//        {
-//            [rgbColorsArray insertObject:rgbColorsArray[i] atIndex:i++];
-//        }
-//        [rgbColorsArray insertObject:rgbColorsArray[[rgbColorsArray count]/2] atIndex:[rgbColorsArray count]/2];
-//        [rgbColorsArray insertObject:rgbColorsArray[[rgbColorsArray count]/2] atIndex:[rgbColorsArray count]/2];
-//    }
+    else{
+        // Make blend of middle two colors and add it to the middle
+        float alpha = 0.5;
+        UIColor *color1 = rgbColorsArray[[rgbColorsArray count]/2-1];
+        UIColor *color2 = rgbColorsArray[[rgbColorsArray count]/2];
+        [rgbColorsArray insertObject:[self blend:color1 color2:color2 alpha:alpha] atIndex:[rgbColorsArray count]/2];
+        [self repeatMiddleColor:rgbColorsArray];
+    }
+}
+
+- (UIColor*)blend:(UIColor*)c1 color2:(UIColor*)c2 alpha:(float)alpha{
+    alpha = MIN( 1.f, MAX( 0.f, alpha ) );
+    float beta = 1.f - alpha;
+    CGFloat r1, g1, b1, a1, r2, g2, b2, a2;
+    [c1 getRed:&r1 green:&g1 blue:&b1 alpha:&a1];
+    [c2 getRed:&r2 green:&g2 blue:&b2 alpha:&a2];
+    CGFloat r = r1 * beta + r2 * alpha;
+    CGFloat g = g1 * beta + g2 * alpha;
+    CGFloat b = b1 * beta + b2 * alpha;
+    return [UIColor colorWithRed:r green:g blue:b alpha:1.f];
 }
 
 - (void)drawGradientWithContext:(CGContextRef)ctx componentsArray:(NSArray*)componentsArray cacheIndex:(NSInteger)cacheIndex{
     CGColorSpaceRef baseSpace = CGColorSpaceCreateDeviceRGB();
     NSArray *locationsArray;
+    //TODO: KLUDGE - cacheIndex
     if (cacheIndex == 0){
-        locationsArray = self.locationsCache.count > 0 ? [self.locationsCache copy] : [self gradientLocationsFromColorCount:componentsArray.count/4 gradientWidth:self.bounds.size.width];
+        locationsArray = self.locationsCache.count > 0 ? [self.locationsCache copy] : [self gradientLocationsFromColorCount:componentsArray.count/4 gradientWidth:self.bounds.size.width cacheIndex:cacheIndex];
     }
     else{
-        locationsArray = self.locationsCacheSecond.count > 0 ? [self.locationsCacheSecond copy] : [self gradientLocationsFromColorCount:componentsArray.count/4 gradientWidth:self.bounds.size.width];
+        locationsArray = self.locationsCacheSecond.count > 0 ? [self.locationsCacheSecond copy] : [self gradientLocationsFromColorCount:componentsArray.count/4 gradientWidth:self.bounds.size.width cacheIndex:cacheIndex];
     }
     CGGradientRef gradient;
     if (!self.repeatColors && self.gradientCacheSecond){
@@ -373,7 +388,7 @@
 }
 
 
-- (NSArray*)gradientLocationsFromColorCount:(NSInteger)colorCount gradientWidth:(CGFloat)gradientWidth{
+- (NSArray*)gradientLocationsFromColorCount:(NSInteger)colorCount gradientWidth:(CGFloat)gradientWidth cacheIndex:(NSInteger)cacheIndex{
     if (colorCount == 0 || gradientWidth == 0){
         return [[NSArray alloc] init];
     }
@@ -391,7 +406,13 @@
         for (NSNumber *num in locationsArrayMutable){
             [result addObject:@([num floatValue] / gradientWidth)];
         }
-        self.locationsCache = [result copy];
+        // TODO: KLLUDGE - cacheIndex
+        if (cacheIndex == 0){
+            self.locationsCache = [result copy];
+        }
+        else{
+            self.locationsCacheSecond = [result copy];
+        }
         return [result copy];
     }
 
