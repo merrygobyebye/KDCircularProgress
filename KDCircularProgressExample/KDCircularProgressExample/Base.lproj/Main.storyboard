@@ -49,16 +49,16 @@
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="angle">
-                                        <integer key="value" value="320"/>
+                                        <integer key="value" value="180"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="color" keyPath="IBColor1">
                                         <color key="value" red="0.97441762909999996" green="1" blue="0.31255436479999998" alpha="1" colorSpace="calibratedRGB"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="color" keyPath="IBColor2">
-                                        <color key="value" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="value" red="0.92235656338816341" green="0.99870418244119818" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="color" keyPath="IBColor3">
-                                        <color key="value" red="0.085719833812801863" green="0.98039215690000003" blue="0.39604470297983985" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="value" red="0.49964753208238211" green="1" blue="0.59136312971858751" alpha="1" colorSpace="calibratedRGB"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="number" keyPath="startAngle">
                                         <integer key="value" value="-90"/>

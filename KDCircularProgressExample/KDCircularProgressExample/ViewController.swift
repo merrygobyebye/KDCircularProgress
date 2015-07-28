@@ -21,11 +21,11 @@ class ViewController: UIViewController {
         progress.progressThickness = 0.2
         progress.trackThickness = 0.6
         progress.clockwise = true
-        progress.gradientRotateSpeed = 2
-        progress.roundedCorners = false
-        progress.glowMode = .Forward
-        progress.glowAmount = 0.9
-        progress.updateColors([UIColor.cyanColor() ,UIColor.whiteColor(), UIColor.magentaColor(), UIColor.whiteColor(), UIColor.orangeColor()])
+        progress.gradientRotateSpeed = 0
+        progress.roundedCorners = true
+        progress.glowMode = .NoGlow
+        progress.glowAmount = 0
+        progress.updateColors([UIColor.yellowColor() ,UIColor.redColor(), UIColor.blueColor()])
         progress.center = CGPoint(x: view.center.x, y: view.center.y + 25)
         view.addSubview(progress)
     }
