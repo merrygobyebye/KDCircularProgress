@@ -31,6 +31,7 @@ IB_DESIGNABLE
 @property (nonatomic) IBInspectable UIColor *trackColor;
 @property (nonatomic, copy) IBInspectable NSArray *progressColors;
 @property (nonatomic) IBInspectable KDCircularProgressGlowMode glowMode;
+@property (nonatomic) IBInspectable BOOL repeatColors;
 
 #pragma mark - Public Lifecycle
 - (instancetype)initWithFrame:(CGRect)frame colors:(NSArray *)colors;

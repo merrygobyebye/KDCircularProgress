@@ -63,7 +63,9 @@
 
 @property(nonatomic) NSArray                        *colorsArray;
 @property(nonatomic) CGGradientRef                  gradientCache;
+@property(nonatomic) CGGradientRef                  gradientCacheSecond;
 @property(nonatomic) NSArray                        *locationsCache;
+@property(nonatomic) NSArray                        *locationsCacheSecond;
 @property(nonatomic) NSInteger                      angle;
 @property(nonatomic) NSInteger                      startAngle;
 @property(nonatomic) BOOL                           clockwise;
@@ -75,6 +77,7 @@
 @property(nonatomic) UIColor                        *trackColor;
 @property(nonatomic) CGFloat                        radius;
 @property(nonatomic) BOOL                           roundedCorners;
+@property(nonatomic) BOOL                           repeatColors;
 
 @end
 
@@ -118,6 +121,7 @@
         _trackThickness = progressLayer.trackThickness;
         _trackColor = progressLayer.trackColor;
         _colorsArray = progressLayer.colorsArray;
+        _repeatColors = progressLayer.repeatColors;
     }
     return self;
 }
@@ -133,7 +137,9 @@
         return;
     }
     _gradientCache = nil;
+    _gradientCacheSecond = nil;
     _locationsCache = nil;
+    _locationsCacheSecond = nil;
     _colorsArray = [colorsArray copy];
 }
 
@@ -187,12 +193,15 @@
     UIGraphicsEndImageContext();
     
     CGContextSaveGState(ctx);
-    //CGContextClipToMask(ctx, self.bounds, drawMask);
+    CGContextClipToMask(ctx, self.bounds, drawMask);
     
     //Gradient - Fill
+    if (!self.repeatColors){
+        [self gradientFillNoRepeat:ctx];
+        return;
+    }
     if ([self.colorsArray count] > 1){
         NSMutableArray *componentsArrayMutable = [[NSMutableArray alloc] init];
-        NSMutableArray *componentsArrayMutable2 = [[NSMutableArray alloc] init];
         NSMutableArray *rgbColorsArray = [[NSMutableArray alloc] init];
         for (UIColor *color in self.colorsArray){
             if (CGColorGetNumberOfComponents(color.CGColor) == 2){
@@ -203,55 +212,18 @@
                 [rgbColorsArray addObject:color];
             }
         }
-//        for (UIColor *color in rgbColorsArray){
-//            const CGFloat *colorComponents = CGColorGetComponents(color.CGColor);
-//
-//            
-//            NSArray *colorsToAdd = [NSArray arrayWithObjects:[NSNumber numberWithFloat:colorComponents[0]], [NSNumber numberWithFloat:colorComponents[1]], [NSNumber numberWithFloat:colorComponents[2]], @1.0, nil];
-//            [componentsArrayMutable addObjectsFromArray:colorsToAdd];
-//
-//        }
-        
-        for (int i = 0; i < (int)[rgbColorsArray count] ; ++i){
-            UIColor *color = (UIColor*)rgbColorsArray[i];
+        for (UIColor *color in rgbColorsArray){
             const CGFloat *colorComponents = CGColorGetComponents(color.CGColor);
+
             
             NSArray *colorsToAdd = [NSArray arrayWithObjects:[NSNumber numberWithFloat:colorComponents[0]], [NSNumber numberWithFloat:colorComponents[1]], [NSNumber numberWithFloat:colorComponents[2]], @1.0, nil];
             [componentsArrayMutable addObjectsFromArray:colorsToAdd];
+
         }
         
-        
-        for (int i = (int)[rgbColorsArray count] -1; i >= 0; --i){
-            UIColor *color = (UIColor*)rgbColorsArray[i];
-            const CGFloat *colorComponents = CGColorGetComponents(color.CGColor);
-            
-            NSArray *colorsToAdd = [NSArray arrayWithObjects:[NSNumber numberWithFloat:colorComponents[0]], [NSNumber numberWithFloat:colorComponents[1]], [NSNumber numberWithFloat:colorComponents[2]], @1.0, nil];
-            [componentsArrayMutable2 addObjectsFromArray:colorsToAdd];
-        }
         NSArray *componentsArray = [componentsArrayMutable copy];
-        NSArray *componentsArray2 = [componentsArrayMutable2 copy];
+        [self drawGradientWithContext:ctx componentsArray:componentsArray cacheIndex:nil];
         
-        
-        CGContextSaveGState(ctx);
-
-       
-       
-
-        CGContextClipToRect(ctx, CGRectMake(self.bounds.size.width/2, self.bounds.origin.y, self.bounds.size.width/2, self.bounds.size.height));
-        [self drawMyGradientWithContext:ctx componentsArray:componentsArray];
-       
-    
-        
-        CGContextRestoreGState(ctx);
-        
-        
-        CGContextClipToRect(ctx, CGRectMake(self.bounds.origin.x, self.bounds.origin.y, self.bounds.size.width/2, self.bounds.size.height));
-        [self drawMyGradientWithContext:ctx componentsArray:componentsArray2];
-        
-        
-       // [self drawMyGradientWithContext:ctx componentsArray:componentsArray bounds:self.bounds];
-        //[self drawMyGradientWithContext:ctx componentsArray:componentsArray2 bounds:CGRectMake(self.bounds.origin.x, self.bounds.origin.y, self.bounds.size.width/2, self.bounds.size.height)];
-//        [self drawGradientWithContext:ctx componentsArray:componentsArray];
     }
     else{
         if (self.colorsArray.count == 1){
@@ -266,10 +238,145 @@
     UIGraphicsPopContext();
 }
 
-- (void)drawMyGradientWithContext:(CGContextRef)ctx componentsArray:(NSArray*)componentsArray{
+-(void)gradientFillNoRepeat:(CGContextRef)ctx{
+    if ([self.colorsArray count] > 1){
+        NSMutableArray *componentsArrayMutable = [[NSMutableArray alloc] init];
+        NSMutableArray *componentsArrayMutable2 = [[NSMutableArray alloc] init];
+        NSMutableArray *rgbColorsArray = [[NSMutableArray alloc] init];
+        for (UIColor *color in self.colorsArray){
+            if (CGColorGetNumberOfComponents(color.CGColor) == 2){
+                CGFloat whiteValue = CGColorGetComponents(color.CGColor)[0];
+                [rgbColorsArray addObject:[UIColor colorWithRed:whiteValue green:whiteValue blue:whiteValue alpha:1.0]];
+            }
+            else{
+                [rgbColorsArray addObject:color];
+            }
+        }
+        [self repeatMiddleColor:rgbColorsArray];
+          for (int i = 0; i < (int)[rgbColorsArray count]/2 ; ++i){
+            UIColor *color = (UIColor*)rgbColorsArray[i];
+            const CGFloat *colorComponents = CGColorGetComponents(color.CGColor);
+            
+            NSArray *colorsToAdd = [NSArray arrayWithObjects:[NSNumber numberWithFloat:colorComponents[0]], [NSNumber numberWithFloat:colorComponents[1]], [NSNumber numberWithFloat:colorComponents[2]], @1.0, nil];
+            [componentsArrayMutable addObjectsFromArray:colorsToAdd];
+        }
+        for (int i =  (int)[rgbColorsArray count] - 1;  i >= (int)[rgbColorsArray count]/2;  --i){
+            UIColor *color = (UIColor*)rgbColorsArray[i];
+            const CGFloat *colorComponents = CGColorGetComponents(color.CGColor);
+            
+            NSArray *colorsToAdd = [NSArray arrayWithObjects:[NSNumber numberWithFloat:colorComponents[0]], [NSNumber numberWithFloat:colorComponents[1]], [NSNumber numberWithFloat:colorComponents[2]], @1.0, nil];
+            [componentsArrayMutable2 addObjectsFromArray:colorsToAdd];
+        }
+        NSArray *componentsArray = [componentsArrayMutable copy];
+        NSArray *componentsArray2 = [componentsArrayMutable2 copy];
+        
+        [self drawGradientWithContext:ctx componentsArray:componentsArray cacheIndex:0];
+        
+        CGContextClipToRect(ctx, CGRectMake(self.bounds.origin.x - 6, self.bounds.origin.y, self.bounds.size.width/2, self.bounds.size.height));
+        [self drawGradientWithContext:ctx componentsArray:componentsArray2 cacheIndex:1];
+    }
+    else{
+        if (self.colorsArray.count == 1){
+            [self fillRectWithContext:ctx color:self.colorsArray[0]];
+        }
+        else{
+            [self fillRectWithContext:ctx color:[UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0]];
+        }
+    }
+    
+    CGContextRestoreGState(ctx);
+    UIGraphicsPopContext();
+    
+    return;
+}
+
+- (void)repeatMiddleColor:(NSMutableArray*)rgbColorsArray{
+    if ([rgbColorsArray count] % 2 != 0){
+        [rgbColorsArray insertObject:rgbColorsArray[[rgbColorsArray count]/2] atIndex:[rgbColorsArray count]/2];
+    }
+    // TODO: Even number of colors!
+//    else{
+//        for (int i = 0; i < [rgbColorsArray count]; ++i)
+//        {
+//            [rgbColorsArray insertObject:rgbColorsArray[i] atIndex:i++];
+//        }
+//        [rgbColorsArray insertObject:rgbColorsArray[[rgbColorsArray count]/2] atIndex:[rgbColorsArray count]/2];
+//        [rgbColorsArray insertObject:rgbColorsArray[[rgbColorsArray count]/2] atIndex:[rgbColorsArray count]/2];
+//    }
+}
+
+//- (void)drawMyGradientWithContext:(CGContextRef)ctx componentsArray:(NSArray*)componentsArray{
+//    CGColorSpaceRef baseSpace = CGColorSpaceCreateDeviceRGB();
+//    NSArray *locationsArray = self.locationsCache.count > 0 ? [self.locationsCache copy] : [self myGradientLocationsFromColorCount:componentsArray.count/4 gradientWidth:self.bounds.size.width];
+//    CGGradientRef gradient;
+////    if (self.gradientCache){
+////        gradient = self.gradientCache;
+////    }
+////    else{
+//        CGFloat *components = malloc(sizeof(CGFloat)*[componentsArray count]);
+//        CGFloat *locations = malloc(sizeof(CGFloat)*[locationsArray count]);
+//        int i = 0;
+//        for (NSNumber *num in componentsArray){
+//            components[i++] = [num floatValue];
+//        }
+//        i = 0;
+//        for (NSNumber *num in locationsArray){
+//            locations[i++] = [num floatValue];
+//        }
+//        
+//        CGGradientRef g = CGGradientCreateWithColorComponents(baseSpace, components, locations, componentsArray.count/4);
+//        self.gradientCache = g;
+//        gradient = g;
+//        free(components);
+//        free(locations);
+////    }
+//    
+//    CGFloat halfX = self.bounds.size.width/2.0;
+//    CGFloat floatPi = (CGFloat)M_PI;
+//    CGFloat rotateSpeed = self.clockwise == YES ? self.gradientRotateSpeed : self.gradientRotateSpeed * -1;
+//    CGFloat angleInRadians = [KDCircularProgressUtilityFunctions degreesToRadians:rotateSpeed * (CGFloat)self.angle - 90];
+//    CGFloat oppositeAngle = angleInRadians > floatPi ? angleInRadians - floatPi : angleInRadians + floatPi;
+//    
+//    
+//
+//    
+//    CGPoint startPoint = CGPointMake((cos(angleInRadians) * halfX + halfX) , (sin(angleInRadians) * halfX) + halfX);
+//    CGPoint endPoint   = CGPointMake(((cos(oppositeAngle) * halfX) + halfX), ((sin(oppositeAngle) * halfX) + halfX));
+//    CGContextDrawLinearGradient(ctx, gradient, startPoint, endPoint, 0);
+//
+//    
+//}
+
+//- (NSArray*)myGradientLocationsFromColorCount:(NSInteger)colorCount gradientWidth:(CGFloat)gradientWidth{
+//    if (colorCount == 0 || gradientWidth == 0){
+//        return [[NSArray alloc] init];
+//    }
+//    else{
+//        NSMutableArray *locationsArrayMutable = [[NSMutableArray alloc] init];
+//        CGFloat progressLineWidth = self.radius * self.progressThickness;
+//        CGFloat firstPoint = gradientWidth/2 - (self.radius - progressLineWidth/2);
+//        CGFloat increment = (gradientWidth - (2*firstPoint))/(CGFloat)(colorCount - 1);
+//        
+//        for (int i = 0; i < colorCount; ++i){
+//            [locationsArrayMutable addObject:[NSNumber numberWithFloat:(firstPoint + ((CGFloat)i * increment))]];
+//        }
+//        NSAssert(locationsArrayMutable.count == colorCount, @"color counts should be equal");
+//        NSMutableArray *result = [[NSMutableArray alloc] init];
+//        for (NSNumber *num in locationsArrayMutable){
+//            [result addObject:@([num floatValue] / gradientWidth)];
+//        }
+//        self.locationsCache = [result copy];
+//        return [result copy];
+//    }
+//}
+
+- (void)drawGradientWithContext:(CGContextRef)ctx componentsArray:(NSArray*)componentsArray cacheIndex:(NSInteger)cacheIndex{
     CGColorSpaceRef baseSpace = CGColorSpaceCreateDeviceRGB();
-    NSArray *locationsArray = self.locationsCache.count > 0 ? [self.locationsCache copy] : [self myGradientLocationsFromColorCount:componentsArray.count/4 gradientWidth:self.bounds.size.width];
+    NSArray *locationsArray = self.locationsCache.count > 0 ? [self.locationsCache copy] : [self gradientLocationsFromColorCount:componentsArray.count/4 gradientWidth:self.bounds.size.width];
     CGGradientRef gradient;
+    if (!self.repeatColors && self.gradientCacheSecond){
+        
+    }
 //    if (self.gradientCache){
 //        gradient = self.gradientCache;
 //    }
@@ -298,79 +405,8 @@
     CGFloat angleInRadians = [KDCircularProgressUtilityFunctions degreesToRadians:rotateSpeed * (CGFloat)self.angle - 90];
     CGFloat oppositeAngle = angleInRadians > floatPi ? angleInRadians - floatPi : angleInRadians + floatPi;
     
-    
-
-    
-    CGPoint startPoint = CGPointMake((cos(angleInRadians) * halfX + halfX) , (sin(angleInRadians) * halfX) + halfX);
-    CGPoint endPoint   = CGPointMake(((cos(oppositeAngle) * halfX) + halfX), ((sin(oppositeAngle) * halfX) + halfX));
-    CGContextDrawLinearGradient(ctx, gradient, startPoint, endPoint, 0);
-
-    
-}
-
-- (NSArray*)myGradientLocationsFromColorCount:(NSInteger)colorCount gradientWidth:(CGFloat)gradientWidth{
-    if (colorCount == 0 || gradientWidth == 0){
-        return [[NSArray alloc] init];
-    }
-    else{
-        NSMutableArray *locationsArrayMutable = [[NSMutableArray alloc] init];
-        CGFloat progressLineWidth = self.radius * self.progressThickness;
-        CGFloat firstPoint = gradientWidth/2 - (self.radius - progressLineWidth/2);
-        CGFloat increment = (gradientWidth - (2*firstPoint))/(CGFloat)(colorCount - 1);
-        
-        for (int i = 0; i < colorCount; ++i){
-            [locationsArrayMutable addObject:[NSNumber numberWithFloat:(firstPoint + ((CGFloat)i * increment))]];
-        }
-        NSAssert(locationsArrayMutable.count == colorCount, @"color counts should be equal");
-        NSMutableArray *result = [[NSMutableArray alloc] init];
-        for (NSNumber *num in locationsArrayMutable){
-            [result addObject:@([num floatValue] / gradientWidth)];
-        }
-        self.locationsCache = [result copy];
-        return [result copy];
-    }
-}
-
-- (void)drawGradientWithContext:(CGContextRef)ctx componentsArray:(NSArray*)componentsArray{
-    CGColorSpaceRef baseSpace = CGColorSpaceCreateDeviceRGB();
-    NSArray *locationsArray = self.locationsCache.count > 0 ? [self.locationsCache copy] : [self gradientLocationsFromColorCount:componentsArray.count/4 gradientWidth:self.bounds.size.width];
-    CGGradientRef gradient;
-    if (self.gradientCache){
-        gradient = self.gradientCache;
-    }
-    else{
-        CGFloat *components = malloc(sizeof(CGFloat)*[componentsArray count]);
-        CGFloat *locations = malloc(sizeof(CGFloat)*[locationsArray count]);
-        int i = 0;
-        for (NSNumber *num in componentsArray){
-            components[i++] = [num floatValue];
-        }
-        i = 0;
-        for (NSNumber *num in locationsArray){
-            locations[i++] = [num floatValue];
-        }
-        
-        CGGradientRef g = CGGradientCreateWithColorComponents(baseSpace, components, locations, componentsArray.count/4);
-        self.gradientCache = g;
-        gradient = g;
-        free(components);
-        free(locations);
-    }
-    
-    CGFloat halfX = self.bounds.size.width/2.0;
-    CGFloat floatPi = (CGFloat)M_PI;
-    CGFloat rotateSpeed = self.clockwise == YES ? self.gradientRotateSpeed : self.gradientRotateSpeed * -1;
-    CGFloat angleInRadians = [KDCircularProgressUtilityFunctions degreesToRadians:rotateSpeed * (CGFloat)self.angle - 90];
-    CGFloat oppositeAngle = angleInRadians > floatPi ? angleInRadians - floatPi : angleInRadians + floatPi;
-    
-    
-    CGFloat cosAngleInRadians = cos(angleInRadians);
-    CGFloat sinAngleInRadians = sin(angleInRadians);
-    CGFloat cosOppositeAngleInRadians = cos(oppositeAngle);
-    CGFloat sinOppositeAngleInRadians = sin(oppositeAngle);
-    
-    CGPoint startPoint = CGPointMake((cos(angleInRadians) * halfX) , (sin(angleInRadians) * halfX) + halfX);
-    CGPoint endPoint   = CGPointMake(((cos(oppositeAngle) * halfX) + halfX), ((sin(oppositeAngle) * halfX) + halfX));
+    CGPoint startPoint = CGPointMake((cos(angleInRadians) * halfX) + halfX , (sin(angleInRadians) * halfX) + halfX);
+    CGPoint endPoint   = CGPointMake((cos(oppositeAngle) * halfX) + halfX, (sin(oppositeAngle) * halfX) + halfX);
     CGContextDrawLinearGradient(ctx, gradient, startPoint, endPoint, 0);
     
 }
@@ -383,9 +419,8 @@
 }
 
 - (void)fillRectWithContext:(CGContextRef)ctx color:(UIColor*)color{
-    //CGContextSetFillColorWithColor(ctx, color.CGColor);
-    //CGContextFillRect(ctx, self.bounds);
-    //CGContextFillRect(ctx, CGRectMake(self.bounds.origin.x, self.bounds.origin.y, self.bounds.size.width/4, self.bounds.size.height/4));
+    CGContextSetFillColorWithColor(ctx, color.CGColor);
+    CGContextFillRect(ctx, self.bounds);
 }
 
 
@@ -558,6 +593,7 @@
     self.progressLayer.progressThickness = self.progressThickness/2;
     self.progressLayer.trackColor = self.trackColor;
     self.progressLayer.trackThickness = self.trackThickness/2;
+    self.progressLayer.repeatColors = self.repeatColors;
 }
 
 - (void)updateColors:(NSArray *)colors{
@@ -576,6 +612,11 @@
     self.progressLayer.radius = radius;
 }
 
+- (void)setRepeatColors:(BOOL)repeatColors{
+    _repeatColors = repeatColors;
+    self.progressLayer.repeatColors = repeatColors;
+}
+
 - (void)initializeInspectableValues{
     _angle = 0;
     _startAngle = 0;
@@ -587,6 +628,7 @@
     _progressThickness = (CGFloat)0.4;
     _trackThickness = (CGFloat)0.5;
     _trackColor = [UIColor blackColor];
+    _repeatColors = YES;
 }
 
 - (void)setAngle:(NSInteger)angle{
