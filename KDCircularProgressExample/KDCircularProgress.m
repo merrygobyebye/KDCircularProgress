@@ -17,7 +17,6 @@
 + (CGFloat)radiansToDegrees:(CGFloat)value;
 + (CGFloat)degreesToRadians:(CGFloat)value;
 
-
 @end
 
 @implementation KDCircularProgressUtilityFunctions
@@ -198,7 +197,7 @@ static               float const                 noRepeatClipToRectOffsetMultipl
     CGContextClipToMask(ctx, self.bounds, drawMask);
     
     //Gradient - Fill
-    if (!self.repeatColors){
+    if (!self.repeatColors && [self.colorsArray count] > 1){
         [self gradientFillNoRepeat:ctx];
         return;
     }
@@ -241,55 +240,43 @@ static               float const                 noRepeatClipToRectOffsetMultipl
 }
 
 -(void)gradientFillNoRepeat:(CGContextRef)ctx{
-    if ([self.colorsArray count] > 1){
-        NSMutableArray *componentsArrayMutable = [[NSMutableArray alloc] init];
-        NSMutableArray *componentsArrayMutable2 = [[NSMutableArray alloc] init];
-        NSMutableArray *rgbColorsArray = [[NSMutableArray alloc] init];
-        for (UIColor *color in self.colorsArray){
-            if (CGColorGetNumberOfComponents(color.CGColor) == 2){
-                CGFloat whiteValue = CGColorGetComponents(color.CGColor)[0];
-                [rgbColorsArray addObject:[UIColor colorWithRed:whiteValue green:whiteValue blue:whiteValue alpha:1.0]];
-            }
-            else{
-                [rgbColorsArray addObject:color];
-            }
-        }
-        [self repeatMiddleColor:rgbColorsArray];
-          for (int i = 0; i < (int)[rgbColorsArray count]/2 ; ++i){
-            UIColor *color = (UIColor*)rgbColorsArray[i];
-            const CGFloat *colorComponents = CGColorGetComponents(color.CGColor);
-            
-            NSArray *colorsToAdd = [NSArray arrayWithObjects:[NSNumber numberWithFloat:colorComponents[0]], [NSNumber numberWithFloat:colorComponents[1]], [NSNumber numberWithFloat:colorComponents[2]], @1.0, nil];
-            [componentsArrayMutable addObjectsFromArray:colorsToAdd];
-        }
-        for (int i =  (int)[rgbColorsArray count] - 1;  i >= (int)[rgbColorsArray count]/2;  --i){
-            UIColor *color = (UIColor*)rgbColorsArray[i];
-            const CGFloat *colorComponents = CGColorGetComponents(color.CGColor);
-            
-            NSArray *colorsToAdd = [NSArray arrayWithObjects:[NSNumber numberWithFloat:colorComponents[0]], [NSNumber numberWithFloat:colorComponents[1]], [NSNumber numberWithFloat:colorComponents[2]], @1.0, nil];
-            [componentsArrayMutable2 addObjectsFromArray:colorsToAdd];
-        }
-        NSArray *componentsArray = [componentsArrayMutable copy];
-        NSArray *componentsArray2 = [componentsArrayMutable2 copy];
-        
-        [self drawGradientWithContext:ctx componentsArray:componentsArray cacheIndex:0];
-        
-        CGContextClipToRect(ctx, CGRectMake(self.bounds.origin.x - noRepeatClipToRectOffsetMultiplier * self.bounds.size.width, self.bounds.origin.y, self.bounds.size.width/2, self.bounds.size.height));
-        [self drawGradientWithContext:ctx componentsArray:componentsArray2 cacheIndex:1];
-    }
-    else{
-        if (self.colorsArray.count == 1){
-            [self fillRectWithContext:ctx color:self.colorsArray[0]];
+    NSMutableArray *componentsArrayMutable = [[NSMutableArray alloc] init];
+    NSMutableArray *componentsArrayMutable2 = [[NSMutableArray alloc] init];
+    NSMutableArray *rgbColorsArray = [[NSMutableArray alloc] init];
+    for (UIColor *color in self.colorsArray){
+        if (CGColorGetNumberOfComponents(color.CGColor) == 2){
+            CGFloat whiteValue = CGColorGetComponents(color.CGColor)[0];
+            [rgbColorsArray addObject:[UIColor colorWithRed:whiteValue green:whiteValue blue:whiteValue alpha:1.0]];
         }
         else{
-            [self fillRectWithContext:ctx color:[UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0]];
+            [rgbColorsArray addObject:color];
         }
     }
+    [self repeatMiddleColor:rgbColorsArray];
+    for (int i = 0; i < (int)[rgbColorsArray count]/2 ; ++i){
+        UIColor *color = (UIColor*)rgbColorsArray[i];
+        const CGFloat *colorComponents = CGColorGetComponents(color.CGColor);
+        
+        NSArray *colorsToAdd = [NSArray arrayWithObjects:[NSNumber numberWithFloat:colorComponents[0]], [NSNumber numberWithFloat:colorComponents[1]], [NSNumber numberWithFloat:colorComponents[2]], @1.0, nil];
+        [componentsArrayMutable addObjectsFromArray:colorsToAdd];
+    }
+    for (int i =  (int)[rgbColorsArray count] - 1;  i >= (int)[rgbColorsArray count]/2;  --i){
+        UIColor *color = (UIColor*)rgbColorsArray[i];
+        const CGFloat *colorComponents = CGColorGetComponents(color.CGColor);
+        
+        NSArray *colorsToAdd = [NSArray arrayWithObjects:[NSNumber numberWithFloat:colorComponents[0]], [NSNumber numberWithFloat:colorComponents[1]], [NSNumber numberWithFloat:colorComponents[2]], @1.0, nil];
+        [componentsArrayMutable2 addObjectsFromArray:colorsToAdd];
+    }
+    NSArray *componentsArray = [componentsArrayMutable copy];
+    NSArray *componentsArray2 = [componentsArrayMutable2 copy];
+    
+    [self drawGradientWithContext:ctx componentsArray:componentsArray cacheIndex:0];
+    
+    CGContextClipToRect(ctx, CGRectMake(self.bounds.origin.x - noRepeatClipToRectOffsetMultiplier * self.bounds.size.width, self.bounds.origin.y, self.bounds.size.width/2, self.bounds.size.height));
+    [self drawGradientWithContext:ctx componentsArray:componentsArray2 cacheIndex:1];
     
     CGContextRestoreGState(ctx);
     UIGraphicsPopContext();
-    
-    return;
 }
 
 - (void)repeatMiddleColor:(NSMutableArray*)rgbColorsArray{
@@ -581,12 +568,21 @@ static               float const                 noRepeatClipToRectOffsetMultipl
 }
 
 - (void)setAngle:(NSInteger)angle{
-    
-    _angle = angle;
+    if (!self.repeatColors){
+        _angle = angle * 354/360;
+    }
+    else{
+        _angle = angle;
+    }
     if ([self isAnimating]){
         [self pauseAnimation];
     }
-    self.progressLayer.angle = angle;
+    if (!self.repeatColors){
+        self.progressLayer.angle = angle * 354/360;
+    }
+    else{
+        self.progressLayer.angle = angle;
+    }
     [self.progressLayer setNeedsDisplay];
     
 }
@@ -729,6 +725,7 @@ static               float const                 noRepeatClipToRectOffsetMultipl
     [self.progressLayer removeAllAnimations];
     _angle = 0;
 }
+
 - (BOOL)isAnimating{
     return [self.progressLayer animationForKey:(@"angle")] != nil;
 }
